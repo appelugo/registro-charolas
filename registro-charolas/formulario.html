@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>Registro - Retorno de Charolas</title>
+    <!-- SheetJS para Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+        }
+
+        :root {
+            --primary: #0A2342;
+            --secondary: #2C4C6B;
+            --accent: #4A89C5;
+            --light: #F5F9FF;
+            --white: #FFFFFF;
+            --gray: #E8EEF2;
+            --text-dark: #1E2B3C;
+            --success: #27AE60;
+            --danger: #E74C3C;
+            --dominos: #00A5B0;
+            --starbucks: #006241;
+            --warning: #F39C12;
+            --orange: #F39C12;
+            --orange-dark: #E67E22;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(10, 35, 66, 0.06);
+        }
+
+        body {
+            background-color: var(--gray);
+            color: var(--text-dark);
+            line-height: 1.4;
+            padding: 15px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 30px);
+        }
+
+        .fixed-header-section {
+            flex-shrink: 0;
+        }
+
+        .top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+        }
+
+        .logo {
+            max-width: 100px;
+            height: auto;
+        }
+
+        .header-compact {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .header-compact h1 {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+
+        .header-compact h1 span {
+            color: var(--accent);
+            font-weight: 300;
+        }
+
+        .spacer {
+            width: 100px;
+            visibility: hidden;
+        }
+
+        .general-form {
+            background: linear-gradient(to right, var(--light), var(--white));
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            border: 1px solid rgba(74, 137, 197, 0.15);
+            align-items: stretch;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 3px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            padding: 8px 14px;
+            border: 1.5px solid var(--gray);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            background-color: var(--white);
+            text-transform: uppercase;
+            height: 40px;
+            width: 100%;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(74, 137, 197, 0.1);
+        }
+
+        .form-group input.obligatorio {
+            border-left: 4px solid var(--danger);
+        }
+
+        .form-group input.error {
+            border-left: 4px solid var(--danger);
+            border-color: var(--danger);
+            background-color: rgba(231, 76, 60, 0.05);
+        }
+
+        .comentario-group {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .comentario-group label {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 3px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .comentario-group textarea {
+            width: 100%;
+            padding: 8px 14px;
+            border: 1.5px solid var(--gray);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            background-color: var(--white);
+            resize: vertical;
+            font-family: inherit;
+            text-transform: uppercase;
+            height: 40px;
+            min-height: 40px;
+            max-height: 80px;
+            line-height: 1.2;
+        }
+
+        .comentario-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(74, 137, 197, 0.1);
+        }
+
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 12px;
+        }
+
+        .totals-compact {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .total-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--light);
+            padding: 6px 14px;
+            border-radius: 30px;
+            border-left: 4px solid;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .total-item.dominos {
+            border-left-color: var(--dominos);
+        }
+
+        .total-item.dominos .total-number {
+            color: var(--dominos);
+        }
+
+        .total-item.starbucks {
+            border-left-color: var(--starbucks);
+        }
+
+        .total-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .total-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .turno-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            background-color: var(--primary);
+            color: white;
+            margin-left: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* ============================================ */
+        /* BOTÓN ORGANIGRAMA - VISIBLE Y FUNCIONAL     */
+        /* ============================================ */
+        .btn-organigrama {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #F39C12;  /* Color naranja sólido */
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: none;
+            letter-spacing: 0.5px;
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(243, 156, 18, 0.3);
+            border: 1px solid #e67e22;
+        }
+
+        .btn-organigrama:hover {
+            background: #E67E22;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(243, 156, 18, 0.4);
+        }
+
+        .btn-organigrama:active {
+            transform: translateY(0);
+            background: #D35400;
+        }
+
+        .table-section {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            overflow-y: auto;
+            border-radius: 10px;
+            border: 1px solid var(--gray);
+            flex: 1;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 10px 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 4px 6px;
+            border-bottom: 1px solid var(--gray);
+            background-color: var(--white);
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .table-input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1.5px solid var(--gray);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            text-align: center;
+            background-color: var(--white);
+            text-transform: uppercase;
+        }
+
+        .table-input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        
+        .table-input[type="number"]::-webkit-inner-spin-button,
+        .table-input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .table-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(74, 137, 197, 0.2);
+        }
+
+        .table-input[readonly] {
+            background-color: #F0F4F8;
+            color: var(--text-dark);
+            font-weight: 600;
+            border-color: #D5DBDB;
+            pointer-events: none;
+            user-select: none;
+            tab-index: -1;
+            text-transform: none;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .badge-dominos {
+            background-color: rgba(0, 165, 176, 0.1);
+            color: var(--dominos);
+            border: 1px solid var(--dominos);
+        }
+
+        .badge-starbucks {
+            background-color: rgba(0, 98, 65, 0.1);
+            color: var(--starbucks);
+            border: 1px solid var(--starbucks);
+        }
+
+        .btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0D2B4A;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #219A53;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #C0392B;
+            transform: translateY(-1px);
+        }
+
+        .btn-info {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #3A7AB0;
+            transform: translateY(-1px);
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #E67E22;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #1E3A4F;
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            margin-top: 10px;
+            color: var(--secondary);
+            font-size: 0.7rem;
+            text-align: right;
+            border-top: 1px solid var(--gray);
+            padding-top: 10px;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 35, 66, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 20000;
+            backdrop-filter: blur(3px);
+        }
+
+        .loader-container {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid var(--light);
+            border-top: 6px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-text {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .loader-subtext {
+            color: var(--secondary);
+            font-size: 0.85rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 15000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .modal-content input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed var(--accent);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: var(--light);
+        }
+
+        .modal-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--danger);
+            float: right;
+        }
+
+        .toast-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 12px 22px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s;
+        }
+
+        .confirm-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .confirm-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 400px;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .confirm-content h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .confirm-content p {
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media screen and (max-width: 768px) {
+            body { padding: 10px; }
+            .container { padding: 15px; height: calc(100vh - 20px); }
+            .top-row { flex-direction: column; align-items: center; gap: 8px; }
+            .logo-container { width: 100%; justify-content: center; }
+            .header-compact { margin-left: 0; width: 100%; justify-content: center; }
+            .header-compact h1 { font-size: 1.2rem; text-align: center; }
+            .spacer { display: none; }
+            .general-form { grid-template-columns: 1fr; }
+            .action-bar { flex-direction: column; align-items: flex-start; }
+            .totals-compact { width: 100%; justify-content: space-between; }
+            .button-group { width: 100%; justify-content: stretch; flex-wrap: wrap; }
+            .btn, .btn-organigrama { 
+                flex: 1 1 auto;
+                font-size: 0.7rem; 
+                padding: 8px 10px; 
+            }
+            td, th { white-space: normal; word-break: break-word; }
+            .badge { white-space: normal; }
+        }
+
+        @media screen and (max-width: 480px) {
+            .total-item { padding: 4px 8px; }
+            .total-number { font-size: 1rem; }
+            .total-label { font-size: 0.6rem; }
+            .turno-badge { font-size: 0.65rem; padding: 4px 10px; }
+            .btn, .btn-organigrama { 
+                font-size: 0.65rem; 
+                padding: 6px 8px; 
+            }
+        }
+
+        .btn-lavado {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #00A5B0, #007A85);
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 165, 176, 0.3);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            white-space: nowrap;
+            margin-left: 15px;
+        }
+
+        .btn-lavado:hover {
+            background: linear-gradient(135deg, #007A85, #005F66);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 165, 176, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="fixed-header-section">
+            <div class="top-row">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="logo-container">
+                        <img src="logo.png" alt="Logo" style="height: 60px; width: auto;">
+                    </div>
+                    <div class="header-compact">
+                        <h1>Bitacora de <span>descarga de charolas</span></h1>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfFya6MDxoWlX6zj0RNIbeo9tgc8jLute0rHQSjKtbZWjn6WA/viewform?usp=header" target="_blank" class="btn-lavado">
+                        🧼 PROCESO DE LAVADO
+                    </a>
+                </div>
+            </div>
+            
+            <div class="general-form">
+                <div class="form-group">
+                    <label>No. Empleado <span style="color: var(--danger);">*</span></label>
+                    <input type="text" id="noEmpleado" class="obligatorio" placeholder="" value="" oninput="this.value = this.value.toUpperCase()">
+                </div>
+                <div class="form-group">
+                    <label>Ruta <span style="color: var(--danger);">*</span></label>
+                    <input type="text" id="ruta" class="obligatorio" placeholder="" value="" oninput="this.value = this.value.toUpperCase()">
+                </div>
+                <div class="form-group">
+                    <label>Bitácora <span style="color: var(--danger);">*</span></label>
+                    <input type="text" id="bitacora" class="obligatorio" placeholder="" value="" oninput="this.value = this.value.toUpperCase()">
+                </div>
+                <div class="form-group">
+                    <label>Unidad <span style="color: var(--danger);">*</span></label>
+                    <input type="text" id="unidad" class="obligatorio" placeholder="" value="" oninput="this.value = this.value.toUpperCase()">
+                </div>
+                <div class="comentario-group">
+                    <label>COMENTARIOS</label>
+                    <textarea id="comentarios" placeholder="" oninput="this.value = this.value.toUpperCase()"></textarea>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <div class="totals-compact">
+                    <div class="total-item dominos">
+                        <span class="total-label">DOMINO'S</span>
+                        <span class="total-number" id="totalDominos">0</span>
+                    </div>
+                    <div class="total-item starbucks">
+                        <span class="total-label">STARBUCKS</span>
+                        <span class="total-number" id="totalStarbucks">0</span>
+                    </div>
+                    <span id="turnoActual" class="turno-badge">TURNO: --</span>
+                </div>
+                
+                <div class="button-group">
+                    <!-- BOTÓN ORGANIGRAMA CON CLASE ESPECÍFICA -->
+                    <button class="btn-organigrama" onclick="abrirModalOrganigrama()">
+                        📋 Organigrama
+                    </button>
+                    <button class="btn btn-primary" onclick="agregarFilas()">
+                        ➕ Agregar 5 líneas
+                    </button>
+                    <button class="btn btn-danger" onclick="limpiarFormulario()">
+                        🧹 Limpiar
+                    </button>
+                    <button class="btn btn-success" onclick="validarYGuardar()">
+                        💾 Guardar
+                    </button>
+                    <button class="btn btn-info" onclick="window.location.href='repositorio.html'">
+                        📊 REGISTRO
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <div class="table-responsive">
+                <table id="tablaTiendas">
+                    <thead>
+                        <tr>
+                            <th>Tienda</th>
+                            <th>Cantidad Bitácora</th>
+                            <th>Diferencia</th>
+                            <th>Cantidad Física</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaBody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Sistema de control de Registro de retorno de charolas V2.0 | E.Lugo 2026 Derechos reservados
+        </div>
+    </div>
+
+    <!-- MODAL PARA CARGAR ORGANIGRAMA -->
+    <div id="modalOrganigrama" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="cerrarModalOrganigrama()">✖</span>
+            <h3>📋 Cargar Organigrama</h3>
+            <p style="margin-bottom: 20px;">Selecciona el archivo Excel (.xlsx) con la columna CECO</p>
+            <input type="file" id="fileOrganigrama" accept=".xlsx">
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn btn-success" onclick="procesarOrganigrama()">Cargar</button>
+                <button class="btn btn-danger" onclick="cerrarModalOrganigrama()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOADER -->
+    <div id="loaderOverlay" class="loader-overlay">
+        <div class="loader-container">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">Procesando...</div>
+            <div class="loader-subtext" id="loaderMessage">Conectando con Firebase...</div>
+        </div>
+    </div>
+
+    <!-- DIALOGO DE CONFIRMACIÓN -->
+    <div id="confirmDialog" class="confirm-dialog">
+        <div class="confirm-content">
+            <h3>✅ ¡Guardado exitoso!</h3>
+            <p id="confirmMessage">Registro guardado correctamente</p>
+            <div class="confirm-buttons">
+                <button class="btn btn-info" onclick="cerrarConfirmacionYAbirRegistro()">📊 Ver Registro</button>
+                <button class="btn btn-primary" onclick="cerrarConfirmacion()">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastMessage" class="toast-message">✅ Registro guardado</div>
+
+    <script>
+        // ============================================
+        // 🔥 CONFIGURACIÓN DE FIREBASE (TUS DATOS)
+        // ============================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDD0lCq8rAnCm2KjsqSwzxlpUhQU2gRVfk",
+            authDomain: "registro-charolas.firebaseapp.com",
+            projectId: "registro-charolas",
+            storageBucket: "registro-charolas.firebasestorage.app",
+            messagingSenderId: "105080206085",
+            appId: "1:105080206085:web:443ba22aaf8cbcea767d6c"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        // ============================================
+        // VARIABLES GLOBALES
+        // ============================================
+        let totalFilas = 0;
+        let ultimoRegistroGuardado = null;
+        let listaCECOs = [];
+        const PASSWORD_CORRECTA = 'Hapack90.';
+
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarTabla(10);
+            actualizarTurno();
+            setInterval(actualizarTurno, 60000);
+            cargarCECOs();
+        });
+
+        // ============================================
+        // CARGAR CECOs DESDE FIREBASE
+        // ============================================
+        async function cargarCECOs() {
+            try {
+                const snapshot = await db.collection('organigrama').doc('lista_cecos').get();
+                if (snapshot.exists) {
+                    listaCECOs = snapshot.data().cecos || [];
+                    console.log(`✅ CECOs cargados: ${listaCECOs.length}`);
+                } else {
+                    console.log('No hay organigrama cargado aún');
+                }
+            } catch (error) {
+                console.error('Error cargando CECOs:', error);
+            }
+        }
+
+        // ============================================
+        // MODAL ORGANIGRAMA
+        // ============================================
+        function abrirModalOrganigrama() {
+            const pass = prompt("🔐 Ingresa la contraseña para cargar organigrama:");
+            if (pass === PASSWORD_CORRECTA) {
+                document.getElementById('modalOrganigrama').style.display = 'flex';
+            } else {
+                alert('❌ Contraseña incorrecta');
+            }
+        }
+
+        function cerrarModalOrganigrama() {
+            document.getElementById('modalOrganigrama').style.display = 'none';
+            document.getElementById('fileOrganigrama').value = '';
+        }
+
+        // ============================================
+        // PROCESAR ARCHIVO EXCEL
+        // ============================================
+        async function procesarOrganigrama() {
+            const fileInput = document.getElementById('fileOrganigrama');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('❌ Selecciona un archivo');
+                return;
+            }
+
+            mostrarLoader('Leyendo archivo Excel...');
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                    // Buscar columna CECO
+                    const headers = rows[0];
+                    let columnaCECO = -1;
+                    
+                    headers.forEach((header, index) => {
+                        if (String(header).toUpperCase().includes('CECO')) {
+                            columnaCECO = index;
+                        }
+                    });
+
+                    if (columnaCECO === -1) {
+                        throw new Error('No se encontró la columna CECO en el archivo');
+                    }
+
+                    // Extraer CECOs (desde fila 2 en adelante)
+                    const nuevosCECOs = [];
+                    for (let i = 1; i < rows.length; i++) {
+                        const fila = rows[i];
+                        if (fila && fila[columnaCECO]) {
+                            const ceco = String(fila[columnaCECO]).trim();
+                            if (ceco) nuevosCECOs.push(ceco);
+                        }
+                    }
+
+                    actualizarLoaderMensaje(`Guardando ${nuevosCECOs.length} CECOs en Firebase...`);
+
+                    // Guardar en Firebase
+                    await db.collection('organigrama').doc('lista_cecos').set({
+                        cecos: nuevosCECOs,
+                        fecha_actualizacion: new Date().toLocaleString(),
+                        total: nuevosCECOs.length
+                    });
+
+                    // Actualizar lista local
+                    listaCECOs = nuevosCECOs;
+
+                    ocultarLoader();
+                    alert(`✅ Organigrama cargado con ${nuevosCECOs.length} CECOs`);
+                    cerrarModalOrganigrama();
+
+                } catch (error) {
+                    ocultarLoader();
+                    alert('❌ Error procesando archivo: ' + error.message);
+                }
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        // ============================================
+        // VALIDAR TIENDA EN TIEMPO REAL
+        // ============================================
+        function validarTienda(input) {
+            const tienda = input.value.trim();
+            const fila = input.closest('tr');
+            
+            if (!tienda) {
+                input.classList.remove('error');
+                return true;
+            }
+
+            const existe = listaCECOs.includes(tienda);
+            
+            if (!existe) {
+                input.classList.add('error');
+                mostrarToast('⚠️ La tienda no existe', '#E74C3C');
+                return false;
+            } else {
+                input.classList.remove('error');
+                return true;
+            }
+        }
+
+        // ============================================
+        // FUNCIONES DE TABLA (modificadas para incluir validación)
+        // ============================================
+        function inicializarTabla(cantidad) {
+            const tbody = document.getElementById('tablaBody');
+            tbody.innerHTML = '';
+            totalFilas = 0;
+            for (let i = 0; i < cantidad; i++) {
+                agregarFila();
+            }
+            actualizarTotales();
+        }
+
+        function agregarFila() {
+            const tbody = document.getElementById('tablaBody');
+            const fila = document.createElement('tr');
+            const numFila = totalFilas + 1;
+            
+            fila.innerHTML = `
+                <td>
+                    <input type="text" class="table-input campo-editable" placeholder="" value="" 
+                           oninput="this.value = this.value.toUpperCase(); calcularFila(this); determinarTipo(this); validarTienda(this);" 
+                           onblur="validarTienda(this);"
+                           data-fila="${numFila}" data-col="0">
+                </td>
+                <td>
+                    <input type="number" class="table-input campo-editable" placeholder="" value="" min="0" oninput="calcularFila(this);" data-fila="${numFila}" data-col="1">
+                </td>
+                <td>
+                    <input type="number" class="table-input campo-editable" placeholder="" value="" min="0" oninput="calcularFila(this);" data-fila="${numFila}" data-col="2">
+                </td>
+                <td>
+                    <input type="number" class="table-input" id="cantidadFisica_${numFila}" readonly value="0">
+                </td>
+                <td>
+                    <input type="text" class="table-input" id="tipo_${numFila}" readonly value="">
+                </td>
+            `;
+            
+            tbody.appendChild(fila);
+            totalFilas++;
+        }
+
+        function agregarFilas() {
+            for (let i = 0; i < 5; i++) {
+                agregarFila();
+            }
+            actualizarTotales();
+            const tableSection = document.querySelector('.table-responsive');
+            if (tableSection) {
+                tableSection.scrollTop = tableSection.scrollHeight;
+            }
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('noEmpleado').value = '';
+            document.getElementById('ruta').value = '';
+            document.getElementById('bitacora').value = '';
+            document.getElementById('unidad').value = '';
+            document.getElementById('comentarios').value = '';
+            inicializarTabla(10);
+            
+            const toast = document.getElementById('toastMessage');
+            toast.textContent = '🧹 Formulario limpiado';
+            toast.style.backgroundColor = '#E74C3C';
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+                toast.style.backgroundColor = '#27AE60';
+            }, 2000);
+        }
+
+        function mostrarToast(mensaje, color) {
+            const toast = document.getElementById('toastMessage');
+            toast.textContent = mensaje;
+            toast.style.backgroundColor = color;
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+                toast.style.backgroundColor = '#27AE60';
+            }, 2000);
+        }
+
+        // ============================================
+        // MANEJO DE TECLADO
+        // ============================================
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                const activeElement = document.activeElement;
+                if (activeElement && activeElement.classList.contains('campo-editable')) {
+                    e.preventDefault();
+                    
+                    const filaActual = activeElement.closest('tr');
+                    if (!filaActual) return;
+                    
+                    const todasFilas = Array.from(document.querySelectorAll('#tablaBody tr'));
+                    const indiceActual = todasFilas.indexOf(filaActual);
+                    
+                    let nuevaFila;
+                    if (e.key === 'ArrowUp' && indiceActual > 0) {
+                        nuevaFila = todasFilas[indiceActual - 1];
+                    } else if (e.key === 'ArrowDown' && indiceActual < todasFilas.length - 1) {
+                        nuevaFila = todasFilas[indiceActual + 1];
+                    } else {
+                        return;
+                    }
+                    
+                    const colIndex = activeElement.dataset.col;
+                    const nuevoCampo = nuevaFila.querySelector(`.campo-editable[data-col="${colIndex}"]`);
+                    if (nuevoCampo) {
+                        nuevoCampo.focus();
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.target.tagName === 'INPUT' && e.target.type === 'number' && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+                e.preventDefault();
+            }
+        }, true);
+
+        // ============================================
+        // FUNCIONES DE CÁLCULO
+        // ============================================
+        function calcularFila(elemento) {
+            const fila = elemento.closest('tr');
+            if (!fila) return;
+            const inputs = fila.querySelectorAll('input');
+            if (inputs.length < 4) return;
+            
+            const cantidadBitacora = inputs[1].value === '' ? 0 : parseFloat(inputs[1].value) || 0;
+            const diferencia = inputs[2].value === '' ? 0 : parseFloat(inputs[2].value) || 0;
+            const cantidadFisica = cantidadBitacora + diferencia;
+            inputs[3].value = cantidadFisica;
+            actualizarTotales();
+        }
+
+        function determinarTipo(elemento) {
+            const fila = elemento.closest('tr');
+            if (!fila) return;
+            const inputs = fila.querySelectorAll('input');
+            if (inputs.length < 5) return;
+            const tienda = inputs[0].value.trim();
+            let tipo = '';
+            if (tienda.startsWith('1')) {
+                tipo = 'DOMINO\'S';
+                inputs[4].value = tipo;
+                inputs[4].className = 'table-input badge badge-dominos';
+            } else if (tienda.length > 0) {
+                tipo = 'STARBUCKS';
+                inputs[4].value = tipo;
+                inputs[4].className = 'table-input badge badge-starbucks';
+            } else {
+                inputs[4].value = '';
+                inputs[4].className = 'table-input';
+            }
+            actualizarTotales();
+        }
+
+        function actualizarTotales() {
+            let totalDominos = 0;
+            let totalStarbucks = 0;
+            const filas = document.querySelectorAll('#tablaBody tr');
+            filas.forEach(fila => {
+                const inputs = fila.querySelectorAll('input');
+                if (inputs.length >= 5) {
+                    const cantidadFisica = parseFloat(inputs[3].value) || 0;
+                    const tipo = inputs[4].value;
+                    if (tipo === 'DOMINO\'S') totalDominos += cantidadFisica;
+                    else if (tipo === 'STARBUCKS') totalStarbucks += cantidadFisica;
+                }
+            });
+            document.getElementById('totalDominos').textContent = Math.round(totalDominos);
+            document.getElementById('totalStarbucks').textContent = Math.round(totalStarbucks);
+        }
+
+        // ============================================
+        // VALIDAR Y GUARDAR (CON VALIDACIÓN DE ORGANIGRAMA)
+        // ============================================
+        function validarYGuardar() {
+            if (!validarCamposObligatorios()) {
+                return;
+            }
+            
+            const filas = document.querySelectorAll('#tablaBody tr');
+            let tieneRegistros = false;
+            let todasValidas = true;
+            let primerError = null;
+            
+            filas.forEach(fila => {
+                const inputs = fila.querySelectorAll('input');
+                if (inputs.length >= 5 && inputs[0].value.trim() !== '') {
+                    tieneRegistros = true;
+                    const tiendaInput = inputs[0];
+                    if (!validarTienda(tiendaInput)) {
+                        todasValidas = false;
+                        if (!primerError) primerError = tiendaInput;
+                    }
+                }
+            });
+
+            if (!tieneRegistros) {
+                alert('⚠️ Debes capturar al menos una tienda antes de guardar');
+                return;
+            }
+
+            if (!todasValidas) {
+                alert('❌ Hay tiendas que no existen en el organigrama. Por favor, verifica los campos en rojo.');
+                if (primerError) primerError.focus();
+                return;
+            }
+            
+            guardarEnRepositorio();
+        }
+
+        // ============================================
+        // DETERMINAR TURNO
+        // ============================================
+        function obtenerTurnoActual() {
+            const ahora = new Date();
+            const hora = ahora.getHours();
+            const minutos = ahora.getMinutes();
+            const horaDecimal = hora + minutos / 60;
+
+            if (horaDecimal >= 6 && horaDecimal < 14) {
+                return 'PRIMERO';
+            } else if (horaDecimal >= 14 && horaDecimal < 21.5) {
+                return 'SEGUNDO';
+            } else {
+                return 'TERCERO';
+            }
+        }
+
+        function actualizarTurno() {
+            const turno = obtenerTurnoActual();
+            document.getElementById('turnoActual').textContent = `TURNO: ${turno}`;
+        }
+
+        // ============================================
+        // VALIDAR CAMPOS OBLIGATORIOS
+        // ============================================
+        function validarCamposObligatorios() {
+            const noEmpleado = document.getElementById('noEmpleado').value.trim();
+            const ruta = document.getElementById('ruta').value.trim();
+            const bitacora = document.getElementById('bitacora').value.trim();
+            const unidad = document.getElementById('unidad').value.trim();
+
+            if (!noEmpleado) {
+                alert('⚠️ El campo No. Empleado es obligatorio');
+                document.getElementById('noEmpleado').focus();
+                return false;
+            }
+            if (!ruta) {
+                alert('⚠️ El campo Ruta es obligatorio');
+                document.getElementById('ruta').focus();
+                return false;
+            }
+            if (!bitacora) {
+                alert('⚠️ El campo Bitácora es obligatorio');
+                document.getElementById('bitacora').focus();
+                return false;
+            }
+            if (!unidad) {
+                alert('⚠️ El campo Unidad es obligatorio');
+                document.getElementById('unidad').focus();
+                return false;
+            }
+            return true;
+        }
+
+        // ============================================
+        // CONTROL DE LOADER
+        // ============================================
+        function mostrarLoader(mensaje = 'Procesando...') {
+            document.getElementById('loaderMessage').textContent = mensaje;
+            document.getElementById('loaderOverlay').style.display = 'flex';
+        }
+
+        function actualizarLoaderMensaje(mensaje) {
+            const loaderMsg = document.getElementById('loaderMessage');
+            if (loaderMsg) loaderMsg.textContent = mensaje;
+        }
+
+        function ocultarLoader() {
+            document.getElementById('loaderOverlay').style.display = 'none';
+        }
+
+        // ============================================
+        // GUARDAR EN FIRESTORE
+        // ============================================
+        async function guardarEnRepositorio() {
+            mostrarLoader('Preparando datos...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                actualizarLoaderMensaje('Validando datos...');
+                
+                const noEmpleado = document.getElementById('noEmpleado').value.trim();
+                const ruta = document.getElementById('ruta').value.trim();
+                const bitacora = document.getElementById('bitacora').value.trim();
+                const unidad = document.getElementById('unidad').value.trim();
+                const comentarios = document.getElementById('comentarios').value;
+                const fechaCaptura = new Date().toLocaleString();
+                const turno = obtenerTurnoActual();
+                const idUnico = Date.now() + '-' + Math.random().toString(36).substr(2, 8);
+
+                const registros = [];
+                const filas = document.querySelectorAll('#tablaBody tr');
+                
+                filas.forEach((fila) => {
+                    const inputs = fila.querySelectorAll('input');
+                    if (inputs.length >= 5 && inputs[0].value.trim() !== '') {
+                        registros.push({
+                            tienda: inputs[0].value,
+                            cantidadBitacora: inputs[1].value === '' ? 0 : parseFloat(inputs[1].value) || 0,
+                            diferencia: inputs[2].value === '' ? 0 : parseFloat(inputs[2].value) || 0,
+                            cantidadFisica: parseFloat(inputs[3].value) || 0,
+                            tipo: inputs[4].value
+                        });
+                    }
+                });
+
+                const totalDominos = document.getElementById('totalDominos').textContent;
+                const totalStarbucks = document.getElementById('totalStarbucks').textContent;
+
+                const formularioCompleto = {
+                    id: idUnico,
+                    fechaCaptura: fechaCaptura,
+                    turno: turno,
+                    datosGenerales: {
+                        noEmpleado: noEmpleado || 'S/N',
+                        ruta: ruta || 'S/N',
+                        bitacora: bitacora || 'S/N',
+                        unidad: unidad || 'S/N',
+                        comentarios: comentarios || 'S/N'
+                    },
+                    totales: {
+                        dominos: totalDominos,
+                        starbucks: totalStarbucks
+                    },
+                    registros: registros,
+                    resumen: {
+                        totalTiendas: registros.length,
+                        totalDominos: totalDominos,
+                        totalStarbucks: totalStarbucks
+                    }
+                };
+
+                actualizarLoaderMensaje('Guardando en Firebase...');
+
+                await db.collection('registros').doc(idUnico).set(formularioCompleto);
+                
+                // También guardar en localStorage como respaldo
+                let repositorio = JSON.parse(localStorage.getItem('repositorioCharolas')) || [];
+                repositorio.unshift(formularioCompleto);
+                localStorage.setItem('repositorioCharolas', JSON.stringify(repositorio));
+                
+                actualizarLoaderMensaje('Finalizando...');
+                await new Promise(resolve => setTimeout(resolve, 200));
+                
+                ocultarLoader();
+                
+                ultimoRegistroGuardado = formularioCompleto;
+
+                document.getElementById('confirmMessage').innerHTML = `
+                    ✅ Registro guardado correctamente<br><br>
+                    📊 Tiendas: ${registros.length}<br>
+                    🕒 Turno: ${turno}<br>
+                    🔥 Firebase: OK
+                `;
+                document.getElementById('confirmDialog').style.display = 'flex';
+
+                setTimeout(() => {
+                    limpiarFormulario();
+                }, 100);
+                
+            } catch (error) {
+                console.error('Error al guardar en Firebase:', error);
+                ocultarLoader();
+                alert('❌ Error al guardar en Firebase: ' + error.message);
+            }
+        }
+
+        // ============================================
+        // FUNCIONES DEL DIÁLOGO
+        // ============================================
+        function cerrarConfirmacion() {
+            document.getElementById('confirmDialog').style.display = 'none';
+        }
+
+        function cerrarConfirmacionYAbirRegistro() {
+            document.getElementById('confirmDialog').style.display = 'none';
+            window.location.href = 'repositorio.html';
+        }
+
+        setInterval(actualizarTotales, 300);
+    </script>
+</body>
+</html>
