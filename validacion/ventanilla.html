@@ -33,6 +33,8 @@
         .btn-validar-header { background:var(--warning); color:white; border:none; border-radius:5px; padding:6px 18px; font-weight:700; font-size:0.8rem; text-transform:uppercase; cursor:pointer; }
         .btn-validar-header:hover { background:#E67E22; }
         .btn-validar-header:disabled { background:#95A5A6; cursor:not-allowed; }
+        .btn-agregar { background:var(--success); color:white; border:none; border-radius:5px; padding:6px 15px; font-weight:600; font-size:0.75rem; cursor:pointer; margin-left:10px; }
+        .btn-agregar:hover { background:#219A53; }
         .btn { padding:4px 10px; border:none; border-radius:5px; font-weight:600; font-size:0.7rem; text-transform:uppercase; cursor:pointer; }
         .btn-primary { background:var(--primary); color:white; }
         .btn-danger { background:var(--danger); color:white; }
@@ -51,18 +53,22 @@
         .validado-message { background:rgba(39,174,96,0.1); color:var(--success); padding:6px 12px; border-radius:5px; border-left:4px solid var(--success); margin-bottom:10px; font-weight:600; font-size:0.8rem; }
         .mensaje-error { color:var(--danger); font-size:0.75rem; margin:8px 0; padding:6px 10px; background:rgba(231,76,60,0.05); border-radius:5px; border-left:4px solid var(--danger); }
         .tabla-section { margin-top:10px; }
-        .table-responsive { overflow-x:auto; border-radius:6px; border:1px solid var(--gray); }
+        .table-responsive { overflow-x:auto; border-radius:6px; border:1px solid var(--gray); max-height:400px; overflow-y:auto; }
         table { width:100%; border-collapse:collapse; table-layout:auto; min-width:1200px; }
-        th { background:var(--primary); color:white; padding:6px 4px; font-size:0.65rem; text-transform:uppercase; text-align:center; }
+        th { background:var(--primary); color:white; padding:6px 4px; font-size:0.65rem; text-transform:uppercase; text-align:center; position:sticky; top:0; z-index:10; }
         td { padding:5px 4px; border-bottom:1px solid var(--gray); text-align:center; font-size:0.75rem; }
         .table-input { width:100%; padding:4px 6px; border:1.5px solid var(--gray); border-radius:4px; font-size:0.75rem; text-align:center; background:var(--white); }
+        .table-input:focus { outline:none; border-color:var(--accent); }
         .table-input:disabled { background:#F0F4F8; border-color:#D5DBDB; }
+        .table-input.valido { border-left:4px solid var(--success); border-color:var(--success); background:rgba(39,174,96,0.05); }
+        .table-input.error { border-left:4px solid var(--danger); border-color:var(--danger); background:rgba(231,76,60,0.05); }
         .badge { padding:2px 6px; border-radius:50px; font-weight:600; font-size:0.6rem; display:inline-block; }
         .badge-dominos { background:rgba(0,165,176,0.1); color:#00A5B0; border:1px solid #00A5B0; }
         .badge-starbucks { background:rgba(0,98,65,0.1); color:#006241; border:1px solid #006241; }
+        .nuevo-registro-badge { background:var(--warning); color:white; padding:2px 8px; border-radius:4px; font-size:0.6rem; margin-left:5px; }
         .loader-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,35,66,0.7); display:none; justify-content:center; align-items:center; z-index:20000; }
         .loader-container { background:white; padding:15px 25px; border-radius:10px; text-align:center; }
-        .loader-spinner { width:35px; height:35px; border:3px solid var(--light); border-top:3px solid var(--accent); border-radius:50%; animation:spin 1s linear infinite; }
+        .loader-spinner { width:35px; height:35px; border:3px solid var(--light); border-top:3px solid var(--accent); border-radius:50%; animation:spin 1s linear infinite; margin:0 auto 10px; }
         @keyframes spin { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
         .footer { margin-top:10px; color:var(--secondary); font-size:0.6rem; text-align:right; border-top:1px solid var(--gray); padding-top:6px; }
     </style>
@@ -93,7 +99,7 @@
                         <div class="campo-group"><label>🔍 BITÁCORA</label><input type="text" id="buscarBitacora" placeholder="Número" onkeypress="if(event.key==='Enter'){buscarRegistro();}"></div>
                         <button class="btn-lupa" onclick="buscarRegistro()">🔍</button>
                     </div>
-                    <!-- Col 2: TRANSPORTE (antes era validador) -->
+                    <!-- Col 2: TRANSPORTE -->
                     <div class="campo-group"><label>TRANSPORTE</label><input type="text" id="transporte" placeholder="Transporte"></div>
                     <!-- Col 3: CHECKBOX en columna -->
                     <div class="campo-group check-group">
@@ -106,7 +112,7 @@
                     <div class="campo-group"><label>OPERADOR</label><input type="text" id="noOperador" placeholder="Operador"></div>
                     <!-- Col 6: VIAJE -->
                     <div class="campo-group"><label>VIAJE</label><input type="text" id="noViaje" placeholder="Viaje"></div>
-                    <!-- Col 7: BOLETA (movida aquí) -->
+                    <!-- Col 7: BOLETA -->
                     <div class="campo-group"><label>BOLETA</label><input type="text" id="boleta" placeholder="Boleta"></div>
                 </div>
                 <div class="fila-comentario">
@@ -117,18 +123,53 @@
         <div style="flex:1; overflow-y:auto; padding-right:5px;">
             <div id="validadoMessage" class="validado-message" style="display:none;">✅ Esta bitácora ya fue validada</div>
             <div id="mensajeError" class="mensaje-error" style="display:none;"></div>
+            
+            <!-- DATOS DE BITÁCORA (solo lectura o captura según el caso) -->
             <div class="form-principal" id="datosBitacora" style="display:none;">
                 <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px;">
-                    <div class="campo-group"><label>NO. EMPLEADO</label><div class="valor" id="verNoEmpleado">—</div></div>
-                    <div class="campo-group"><label>RUTA</label><div class="valor" id="verRuta">—</div></div>
-                    <div class="campo-group"><label>BITÁCORA</label><div class="valor" id="verBitacora">—</div></div>
-                    <div class="campo-group"><label>UNIDAD</label><div class="valor" id="verUnidad">—</div></div>
+                    <div class="campo-group">
+                        <label>NO. EMPLEADO</label>
+                        <input type="text" id="editNoEmpleado" class="table-input" placeholder="No. Empleado" value="">
+                    </div>
+                    <div class="campo-group">
+                        <label>RUTA</label>
+                        <input type="text" id="editRuta" class="table-input" placeholder="Ruta" value="">
+                    </div>
+                    <div class="campo-group">
+                        <label>BITÁCORA</label>
+                        <input type="text" id="editBitacora" class="table-input" placeholder="Bitácora" value="">
+                    </div>
+                    <div class="campo-group">
+                        <label>UNIDAD</label>
+                        <input type="text" id="editUnidad" class="table-input" placeholder="Unidad" value="">
+                    </div>
                 </div>
             </div>
-            <div id="tablaSection" style="display:none;" class="tabla-section">
-                <h3>📋 VALIDACIÓN DE TIENDAS</h3>
+
+            <!-- CABECERA DE TABLA CON BOTÓN AGREGAR -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin:10px 0 5px;">
+                <h3 style="color:var(--primary); font-size:1rem;">📋 VALIDACIÓN DE TIENDAS</h3>
+                <button class="btn-agregar" onclick="agregarFilasTiendas()" id="btnAgregarTiendas">➕ AGREGAR 5 TIENDAS</button>
+            </div>
+
+            <!-- TABLA DE TIENDAS -->
+            <div id="tablaSection" style="display:block;" class="tabla-section">
                 <div class="table-responsive">
-                    <table id="tablaTiendas"><thead><tr><th>CECO</th><th>NOMBRE TIENDA</th><th>MARCA</th><th>REMISIÓN</th><th>COMPLEMENTO</th><th>CANTIDAD</th><th>DIFERENCIA</th><th>CNT. FÍSICA</th></tr></thead><tbody id="tablaBody"></tbody></table>
+                    <table id="tablaTiendas">
+                        <thead>
+                            <tr>
+                                <th>CECO</th>
+                                <th>NOMBRE TIENDA</th>
+                                <th>MARCA</th>
+                                <th>REMISIÓN</th>
+                                <th>COMPLEMENTO</th>
+                                <th>CANTIDAD</th>
+                                <th>DIFERENCIA</th>
+                                <th>CNT. FÍSICA</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaBody"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -148,7 +189,11 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        let registroActual = null, documentoIdActual = null, datosOrganigrama = [], esModoEdicion = true;
+        let registroActual = null;
+        let documentoIdActual = null;
+        let datosOrganigrama = [];
+        let esModoEdicion = true;
+        let esNuevoRegistro = false;  // Indica si estamos creando un registro nuevo
 
         // MOSTRAR USUARIO DESDE SESSIONSTORAGE
         document.addEventListener('DOMContentLoaded', function() {
@@ -160,6 +205,8 @@
             document.getElementById('userInfo').style.display = 'flex';
             document.getElementById('loginButtons').style.display = 'none';
             cargarOrganigrama();
+            // Inicializar tabla vacía con 5 filas
+            inicializarTablaVacia();
         });
 
         function cerrarSesion() { sessionStorage.clear(); window.location.href = 'login.html'; }
@@ -168,6 +215,7 @@
             try {
                 const snap = await db.collection('organigrama').doc('lista_cecos').get();
                 if (snap.exists) datosOrganigrama = snap.data().datosCompletos || [];
+                console.log('✅ Organigrama cargado:', datosOrganigrama.length);
             } catch (e) { datosOrganigrama = []; }
         }
 
@@ -177,63 +225,200 @@
             return t ? { nombre: t.tienda || '', marca: t.marca || '' } : { nombre: '', marca: '' };
         }
 
-        async function buscarRegistro() {
-            const bit = document.getElementById('buscarBitacora').value.trim();
-            if (!bit) { mostrarError('⚠️ Ingresa número'); return; }
-            mostrarLoader();
-            try {
-                const snap = await db.collection('registros').where('datosGenerales.bitacora', '==', bit).get();
-                if (snap.empty) {
-                    ocultarLoader(); mostrarError('❌ No encontrado'); ocultarTodo();
-                    registroActual = null; documentoIdActual = null; return;
+        function validarTienda(input, index) {
+            const ceco = input.value.trim();
+            if (!ceco) {
+                input.classList.remove('valido', 'error');
+                // Limpiar nombre y marca de la fila
+                const fila = input.closest('tr');
+                if (fila) {
+                    fila.cells[1].innerHTML = '<span class="texto-tabla"></span>';
+                    fila.cells[2].innerHTML = '<span class="badge"></span>';
                 }
-                snap.forEach(d => { registroActual = d.data(); documentoIdActual = d.id; });
-                if (registroActual.validacion) {
-                    esModoEdicion = false; document.getElementById('validadoMessage').style.display = 'block';
-                    document.getElementById('btnValidar').disabled = true; bloquearCampos(true);
-                    cargarDatosValidacion(registroActual);
-                } else {
-                    esModoEdicion = true; document.getElementById('validadoMessage').style.display = 'none';
-                    document.getElementById('btnValidar').disabled = false; bloquearCampos(false);
+                return;
+            }
+
+            const datos = obtenerDatosTienda(ceco);
+            const fila = input.closest('tr');
+            
+            if (datos.nombre || datos.marca) {
+                input.classList.add('valido');
+                input.classList.remove('error');
+                if (fila) {
+                    fila.cells[1].innerHTML = `<span class="texto-tabla">${datos.nombre}</span>`;
+                    
+                    let badgeClass = '';
+                    if (datos.marca.toUpperCase().includes('DOMINO')) badgeClass = 'badge-dominos';
+                    else if (datos.marca.toUpperCase().includes('STARBUCKS') || datos.marca.toUpperCase().includes('CHILIS')) badgeClass = 'badge-starbucks';
+                    
+                    fila.cells[2].innerHTML = `<span class="badge ${badgeClass}">${datos.marca}</span>`;
                 }
-                mostrarRegistro(registroActual); ocultarError();
-            } catch (e) { mostrarError('❌ Error: ' + e.message); } finally { ocultarLoader(); }
+            } else {
+                input.classList.add('error');
+                input.classList.remove('valido');
+                if (fila) {
+                    fila.cells[1].innerHTML = '<span class="texto-tabla" style="color:var(--danger);">No encontrado</span>';
+                    fila.cells[2].innerHTML = '<span class="badge"></span>';
+                }
+            }
         }
 
-        function bloquearCampos(b) {
-            ['transporte','firmada','sellada','fechaBitacora','noOperador','noViaje','boleta','comentariosValidacion']
-                .forEach(id => { const el = document.getElementById(id); if(el) el.disabled = b; });
+        // Inicializar tabla vacía con 5 filas
+        function inicializarTablaVacia() {
+            const tbody = document.getElementById('tablaBody');
+            tbody.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                agregarFilaTienda();
+            }
+        }
+
+        // Agregar una fila de tienda (vacía)
+        function agregarFilaTienda() {
+            const tbody = document.getElementById('tablaBody');
+            const index = tbody.children.length;
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td><input type="text" class="table-input" placeholder="CECO" onblur="validarTienda(this, ${index})" onkeypress="if(event.key==='Enter'){this.blur();}"></td>
+                <td><span class="texto-tabla"></span></td>
+                <td><span class="badge"></span></td>
+                <td><input type="text" class="table-input" placeholder="Remisión"></td>
+                <td><input type="text" class="table-input" placeholder="Complemento"></td>
+                <td>0</td>
+                <td>0</td>
+                <td><strong>0</strong></td>
+            `;
+            tbody.appendChild(fila);
+        }
+
+        // Agregar 5 filas nuevas
+        function agregarFilasTiendas() {
+            for (let i = 0; i < 5; i++) {
+                agregarFilaTienda();
+            }
+        }
+
+        async function buscarRegistro() {
+            const bitacora = document.getElementById('buscarBitacora').value.trim();
+            
+            if (!bitacora) {
+                mostrarError('⚠️ Ingresa número de bitácora');
+                return;
+            }
+
+            mostrarLoader();
+            try {
+                const snapshot = await db.collection('registros')
+                    .where('datosGenerales.bitacora', '==', bitacora)
+                    .get();
+
+                if (snapshot.empty) {
+                    // No encontrado - modo nuevo registro
+                    ocultarLoader();
+                    esNuevoRegistro = true;
+                    esModoEdicion = true;
+                    document.getElementById('validadoMessage').style.display = 'none';
+                    document.getElementById('btnValidar').disabled = false;
+                    document.getElementById('btnAgregarTiendas').style.display = 'inline-block';
+                    
+                    // Limpiar campos y preparar para nuevo registro
+                    document.getElementById('editNoEmpleado').value = '';
+                    document.getElementById('editRuta').value = '';
+                    document.getElementById('editBitacora').value = bitacora;
+                    document.getElementById('editUnidad').value = '';
+                    
+                    // Mostrar sección de edición
+                    document.getElementById('datosBitacora').style.display = 'block';
+                    // Habilitar campos de edición
+                    document.getElementById('editNoEmpleado').disabled = false;
+                    document.getElementById('editRuta').disabled = false;
+                    document.getElementById('editBitacora').disabled = true; // La bitácora no se puede cambiar
+                    document.getElementById('editUnidad').disabled = false;
+                    
+                    // Limpiar tabla y agregar 5 filas vacías
+                    inicializarTablaVacia();
+                    
+                    mostrarError('📝 No existe. Puedes crear un nuevo registro.');
+                    registroActual = null;
+                    documentoIdActual = null;
+                    return;
+                }
+
+                // Registro existente
+                snapshot.forEach(doc => {
+                    registroActual = doc.data();
+                    documentoIdActual = doc.id;
+                });
+
+                // Cargar datos en el formulario de edición
+                document.getElementById('editNoEmpleado').value = registroActual.datosGenerales?.noEmpleado || '';
+                document.getElementById('editRuta').value = registroActual.datosGenerales?.ruta || '';
+                document.getElementById('editBitacora').value = registroActual.datosGenerales?.bitacora || '';
+                document.getElementById('editUnidad').value = registroActual.datosGenerales?.unidad || '';
+                
+                // Deshabilitar campos si ya está validado
+                const validado = registroActual.validacion ? true : false;
+                
+                document.getElementById('editNoEmpleado').disabled = validado;
+                document.getElementById('editRuta').disabled = validado;
+                document.getElementById('editBitacora').disabled = true;
+                document.getElementById('editUnidad').disabled = validado;
+                document.getElementById('datosBitacora').style.display = 'block';
+
+                if (validado) {
+                    esModoEdicion = false;
+                    document.getElementById('validadoMessage').style.display = 'block';
+                    document.getElementById('btnValidar').disabled = true;
+                    document.getElementById('btnAgregarTiendas').style.display = 'none';
+                    bloquearCampos(true);
+                    cargarDatosValidacion(registroActual);
+                } else {
+                    esModoEdicion = true;
+                    document.getElementById('validadoMessage').style.display = 'none';
+                    document.getElementById('btnValidar').disabled = false;
+                    document.getElementById('btnAgregarTiendas').style.display = 'inline-block';
+                    bloquearCampos(false);
+                }
+
+                mostrarRegistro(registroActual);
+                ocultarError();
+
+            } catch (e) { 
+                mostrarError('❌ Error: ' + e.message); 
+            } finally { 
+                ocultarLoader(); 
+            }
         }
 
         function mostrarRegistro(r) {
-            document.getElementById('verNoEmpleado').textContent = r.datosGenerales?.noEmpleado||'S/N';
-            document.getElementById('verRuta').textContent = r.datosGenerales?.ruta||'S/N';
-            document.getElementById('verBitacora').textContent = r.datosGenerales?.bitacora||'S/N';
-            document.getElementById('verUnidad').textContent = r.datosGenerales?.unidad||'S/N';
-            document.getElementById('datosBitacora').style.display = 'block';
-            document.getElementById('tablaSection').style.display = 'block';
-
             const tbody = document.getElementById('tablaBody');
             tbody.innerHTML = '';
+
             if (r.registros && r.registros.length) {
                 r.registros.forEach((t, i) => {
                     const d = obtenerDatosTienda(t.tienda);
                     const badge = (d.marca||'').toUpperCase().includes('DOMINO') ? 'badge-dominos' : 'badge-starbucks';
                     const rem = r.validacion?.tiendas?.[i]?.remision||'';
                     const com = r.validacion?.tiendas?.[i]?.complemento||'';
-                    tbody.innerHTML += `<tr>
-                        <td>${t.tienda||''}</td>
-                        <td>${d.nombre||''}</td>
+                    const fila = document.createElement('tr');
+                    fila.innerHTML = `
+                        <td><input type="text" class="table-input" value="${t.tienda||''}" placeholder="CECO" onblur="validarTienda(this, ${i})" ${!esModoEdicion?'disabled':''}></td>
+                        <td><span class="texto-tabla">${d.nombre||''}</span></td>
                         <td><span class="badge ${badge}">${d.marca||''}</span></td>
-                        <td><input type="text" class="table-input" value="${rem}" placeholder="Remisión" id="remision_${i}" ${!esModoEdicion?'disabled':''}></td>
-                        <td><input type="text" class="table-input" value="${com}" placeholder="Complemento" id="complemento_${i}" ${!esModoEdicion?'disabled':''}></td>
+                        <td><input type="text" class="table-input" value="${rem}" placeholder="Remisión" ${!esModoEdicion?'disabled':''}></td>
+                        <td><input type="text" class="table-input" value="${com}" placeholder="Complemento" ${!esModoEdicion?'disabled':''}></td>
                         <td>${t.cantidadBitacora||0}</td>
                         <td>${t.diferencia||0}</td>
                         <td><strong>${t.cantidadFisica||0}</strong></td>
-                    </tr>`;
+                    `;
+                    tbody.appendChild(fila);
                 });
             }
             if (r.validacion) cargarDatosValidacion(r);
+        }
+
+        function bloquearCampos(b) {
+            const campos = ['transporte','firmada','sellada','fechaBitacora','noOperador','noViaje','boleta','comentariosValidacion'];
+            campos.forEach(id => { const el = document.getElementById(id); if(el) el.disabled = b; });
         }
 
         function cargarDatosValidacion(r) {
@@ -250,73 +435,162 @@
         }
 
         async function guardarValidacion() {
-            if (!documentoIdActual) { alert('❌ Primero busca una bitácora'); return; }
-            if (!esModoEdicion) { alert('❌ Ya validada'); return; }
             mostrarLoader('Guardando...');
+            
             try {
+                // Recolectar datos de tiendas
                 const tiendas = [];
-                document.querySelectorAll('#tablaBody tr').forEach((f,i) => {
+                const filas = document.querySelectorAll('#tablaBody tr');
+                let cantidadTotal = 0;
+                let totalDominos = 0;
+                let totalStarbucks = 0;
+
+                filas.forEach((fila, index) => {
+                    const inputs = fila.querySelectorAll('input');
+                    const ceco = inputs[0]?.value.trim() || '';
+                    if (!ceco) return; // Ignorar filas vacías
+
+                    const remision = inputs[1]?.value || '';
+                    const complemento = inputs[2]?.value || '';
+                    
+                    // Obtener marca y nombre del organigrama
+                    const datos = obtenerDatosTienda(ceco);
+                    const cantidad = 0; // Por defecto para nuevos registros
+                    
                     tiendas.push({
-                        remision: document.getElementById(`remision_${i}`)?.value||'',
-                        complemento: document.getElementById(`complemento_${i}`)?.value||''
+                        tienda: ceco,
+                        cantidadBitacora: 0,
+                        diferencia: 0,
+                        cantidadFisica: 0,
+                        tipo: datos.marca || '',
+                        remision,
+                        complemento
                     });
+
+                    cantidadTotal++;
+                    if (datos.marca?.toUpperCase().includes('DOMINO')) totalDominos++;
+                    else if (datos.marca?.toUpperCase().includes('STARBUCKS') || datos.marca?.toUpperCase().includes('CHILIS')) totalStarbucks++;
                 });
 
-                // Obtener nombre del usuario logueado
                 const nombreValidador = sessionStorage.getItem('usuarioNombre') || sessionStorage.getItem('usuarioEmpleado') || 'Validador';
                 const fechaActual = new Date().toLocaleString();
+                const fechaValidacion = new Date().toISOString().split('T')[0]; // Fecha para el campo fechaBitacora
 
-                // Comentario combinado: respeta el existente + el nuevo de ventanilla
+                // Combinar comentarios
                 const comentarioExistente = registroActual?.datosGenerales?.comentarios || '';
                 const comentarioNuevo = document.getElementById('comentariosValidacion').value.trim();
-                
-                let comentarioFinal = '';
-                if (comentarioExistente && comentarioNuevo) {
-                    comentarioFinal = `${comentarioExistente} | [Validación ${fechaActual} por ${nombreValidador}: ${comentarioNuevo}]`;
-                } else if (comentarioNuevo) {
-                    comentarioFinal = `[Validación ${fechaActual} por ${nombreValidador}: ${comentarioNuevo}]`;
-                } else {
-                    comentarioFinal = comentarioExistente;
+                let comentarioFinal = comentarioExistente;
+                if (comentarioNuevo) {
+                    comentarioFinal = comentarioExistente 
+                        ? `${comentarioExistente} | [Validación ${fechaActual} por ${nombreValidador}: ${comentarioNuevo}]`
+                        : `[Validación ${fechaActual} por ${nombreValidador}: ${comentarioNuevo}]`;
                 }
 
+                const datosGenerales = {
+                    noEmpleado: document.getElementById('editNoEmpleado').value.trim() || 'S/N',
+                    ruta: document.getElementById('editRuta').value.trim() || 'S/N',
+                    bitacora: document.getElementById('editBitacora').value.trim() || 'S/N',
+                    unidad: document.getElementById('editUnidad').value.trim() || 'S/N',
+                    comentarios: comentarioFinal
+                };
+
+                const resumen = {
+                    totalTiendas: tiendas.length,
+                    totalDominos: totalDominos,
+                    totalStarbucks: totalStarbucks
+                };
+
                 const validacionData = {
-                    validador: nombreValidador,  // Automático desde sesión
+                    validador: nombreValidador,
                     transporte: document.getElementById('transporte').value.trim() || '',
                     firmada: document.getElementById('firmada').checked,
                     sellada: document.getElementById('sellada').checked,
-                    fechaBitacora: document.getElementById('fechaBitacora').value || '',
+                    fechaBitacora: document.getElementById('fechaBitacora').value || fechaValidacion,
                     noOperador: document.getElementById('noOperador').value.trim() || '',
                     noViaje: document.getElementById('noViaje').value.trim() || '',
                     boleta: document.getElementById('boleta').value.trim() || '',
-                    comentarios: comentarioNuevo,  // Comentario de validación aparte
-                    tiendas: tiendas,
+                    comentarios: comentarioNuevo,
+                    tiendas: tiendas.map(t => ({ remision: t.remision, complemento: t.complemento })),
                     fechaValidacion: fechaActual,
                     validadoPor: nombreValidador
                 };
 
-                await db.collection('registros').doc(documentoIdActual).update({
-                    validacion: validacionData,
-                    'datosGenerales.comentarios': comentarioFinal  // Actualizar el campo de comentarios combinado
-                });
+                if (esNuevoRegistro) {
+                    // Crear nuevo registro
+                    const idUnico = Date.now() + '-' + Math.random().toString(36).substr(2, 8);
+                    const nuevoRegistro = {
+                        id: idUnico,
+                        fechaCaptura: fechaActual,
+                        turno: obtenerTurnoActual(),
+                        datosGenerales: datosGenerales,
+                        totales: {
+                            dominos: totalDominos.toString(),
+                            starbucks: totalStarbucks.toString()
+                        },
+                        registros: tiendas.map(t => ({
+                            tienda: t.tienda,
+                            cantidadBitacora: t.cantidadBitacora,
+                            diferencia: t.diferencia,
+                            cantidadFisica: t.cantidadFisica,
+                            tipo: t.tipo
+                        })),
+                        resumen: resumen,
+                        validacion: validacionData
+                    };
+                    
+                    await db.collection('registros').doc(idUnico).set(nuevoRegistro);
+                    alert('✅ Nuevo registro guardado correctamente');
+                } else {
+                    // Actualizar registro existente
+                    await db.collection('registros').doc(documentoIdActual).update({
+                        datosGenerales: datosGenerales,
+                        registros: tiendas.map(t => ({
+                            tienda: t.tienda,
+                            cantidadBitacora: t.cantidadBitacora,
+                            diferencia: t.diferencia,
+                            cantidadFisica: t.cantidadFisica,
+                            tipo: t.tipo
+                        })),
+                        resumen: resumen,
+                        totales: {
+                            dominos: totalDominos.toString(),
+                            starbucks: totalStarbucks.toString()
+                        },
+                        validacion: validacionData
+                    });
+                    alert('✅ Validación guardada correctamente');
+                }
 
-                ocultarLoader(); alert('✅ Validación guardada');
+                ocultarLoader();
                 esModoEdicion = false;
                 document.getElementById('validadoMessage').style.display = 'block';
                 document.getElementById('btnValidar').disabled = true;
                 bloquearCampos(true);
 
-            } catch (e) { ocultarLoader(); alert('❌ Error: ' + e.message); }
+            } catch (e) { 
+                ocultarLoader(); 
+                alert('❌ Error: ' + e.message); 
+            }
         }
 
-        function mostrarLoader() { document.getElementById('loaderOverlay').style.display = 'flex'; }
-        function ocultarLoader() { document.getElementById('loaderOverlay').style.display = 'none'; }
-        function mostrarError(m) { document.getElementById('mensajeError').textContent = m; document.getElementById('mensajeError').style.display = 'block'; }
-        function ocultarError() { document.getElementById('mensajeError').style.display = 'none'; }
-        function ocultarTodo() {
-            document.getElementById('datosBitacora').style.display = 'none';
-            document.getElementById('tablaSection').style.display = 'none';
-            document.getElementById('validadoMessage').style.display = 'none';
+        function obtenerTurnoActual() {
+            const ahora = new Date();
+            const hora = ahora.getHours() + ahora.getMinutes() / 60;
+            if (hora >= 6 && hora < 14) return 'PRIMERO';
+            if (hora >= 14 && hora < 21.5) return 'SEGUNDO';
+            return 'TERCERO';
         }
+
+        function mostrarLoader(m) { 
+            document.querySelector('.loader-text').textContent = m || 'Procesando...'; 
+            document.getElementById('loaderOverlay').style.display = 'flex'; 
+        }
+        function ocultarLoader() { document.getElementById('loaderOverlay').style.display = 'none'; }
+        function mostrarError(m) { 
+            document.getElementById('mensajeError').textContent = m; 
+            document.getElementById('mensajeError').style.display = 'block'; 
+        }
+        function ocultarError() { document.getElementById('mensajeError').style.display = 'none'; }
     </script>
 </body>
 </html>
