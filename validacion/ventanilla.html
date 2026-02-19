@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>Ventanilla - Validador de Charolas</title>
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -46,7 +47,7 @@
         .busqueda-integrada { display:flex; gap:3px; align-items:flex-end; }
         .busqueda-integrada .campo-group { flex:1; }
         .btn-lupa { background:var(--accent); color:white; border:none; border-radius:5px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.9rem; }
-        .fila-comentario { margin-top:6px; display:grid; grid-template-columns:0.9fr 3fr; gap:6px; }
+        .fila-comentario { margin-top:6px; display:grid; grid-template-columns:1fr 3fr; gap:6px; }
         .validado-message { background:rgba(39,174,96,0.1); color:var(--success); padding:6px 12px; border-radius:5px; border-left:4px solid var(--success); margin-bottom:10px; font-weight:600; font-size:0.8rem; }
         .mensaje-error { color:var(--danger); font-size:0.75rem; margin:8px 0; padding:6px 10px; background:rgba(231,76,60,0.05); border-radius:5px; border-left:4px solid var(--danger); }
         .tabla-section { margin-top:10px; }
@@ -87,23 +88,29 @@
             </div>
             <div class="form-principal">
                 <div class="fila-campos">
+                    <!-- Col 1: Búsqueda -->
                     <div class="busqueda-integrada">
                         <div class="campo-group"><label>🔍 BITÁCORA</label><input type="text" id="buscarBitacora" placeholder="Número" onkeypress="if(event.key==='Enter'){buscarRegistro();}"></div>
                         <button class="btn-lupa" onclick="buscarRegistro()">🔍</button>
                     </div>
-                    <div class="campo-group"><label>VALIDADOR</label><input type="text" id="validador" placeholder="Validador"></div>
+                    <!-- Col 2: TRANSPORTE (antes era validador) -->
                     <div class="campo-group"><label>TRANSPORTE</label><input type="text" id="transporte" placeholder="Transporte"></div>
+                    <!-- Col 3: CHECKBOX en columna -->
                     <div class="campo-group check-group">
                         <label><input type="checkbox" id="firmada" checked> FIRMADA</label>
                         <label><input type="checkbox" id="sellada" checked> SELLADA</label>
                     </div>
+                    <!-- Col 4: FECHA -->
                     <div class="campo-group"><label>FECHA</label><input type="date" id="fechaBitacora"></div>
+                    <!-- Col 5: OPERADOR -->
                     <div class="campo-group"><label>OPERADOR</label><input type="text" id="noOperador" placeholder="Operador"></div>
+                    <!-- Col 6: VIAJE -->
                     <div class="campo-group"><label>VIAJE</label><input type="text" id="noViaje" placeholder="Viaje"></div>
+                    <!-- Col 7: BOLETA (movida aquí) -->
+                    <div class="campo-group"><label>BOLETA</label><input type="text" id="boleta" placeholder="Boleta"></div>
                 </div>
                 <div class="fila-comentario">
-                    <div class="campo-group"><label>BOLETA</label><input type="text" id="boleta" placeholder="Boleta"></div>
-                    <div class="campo-group"><label>COMENTARIOS</label><input type="text" id="comentariosValidacion" placeholder="Observaciones"></div>
+                    <div class="campo-group"><label>COMENTARIOS</label><input type="text" id="comentariosValidacion" placeholder="Observaciones de validación"></div>
                 </div>
             </div>
         </div>
@@ -194,7 +201,7 @@
         }
 
         function bloquearCampos(b) {
-            ['validador','transporte','firmada','sellada','fechaBitacora','noOperador','noViaje','boleta','comentariosValidacion']
+            ['transporte','firmada','sellada','fechaBitacora','noOperador','noViaje','boleta','comentariosValidacion']
                 .forEach(id => { const el = document.getElementById(id); if(el) el.disabled = b; });
         }
 
@@ -231,7 +238,6 @@
 
         function cargarDatosValidacion(r) {
             if (r.validacion) {
-                document.getElementById('validador').value = r.validacion.validador||'';
                 document.getElementById('transporte').value = r.validacion.transporte||'';
                 document.getElementById('firmada').checked = r.validacion.firmada||false;
                 document.getElementById('sellada').checked = r.validacion.sellada||false;
@@ -255,24 +261,50 @@
                         complemento: document.getElementById(`complemento_${i}`)?.value||''
                     });
                 });
-                const v = {
-                    validador: document.getElementById('validador').value.trim()||'Validador',
-                    transporte: document.getElementById('transporte').value.trim()||'',
+
+                // Obtener nombre del usuario logueado
+                const nombreValidador = sessionStorage.getItem('usuarioNombre') || sessionStorage.getItem('usuarioEmpleado') || 'Validador';
+                const fechaActual = new Date().toLocaleString();
+
+                // Comentario combinado: respeta el existente + el nuevo de ventanilla
+                const comentarioExistente = registroActual?.datosGenerales?.comentarios || '';
+                const comentarioNuevo = document.getElementById('comentariosValidacion').value.trim();
+                
+                let comentarioFinal = '';
+                if (comentarioExistente && comentarioNuevo) {
+                    comentarioFinal = `${comentarioExistente} | [Validación ${fechaActual} por ${nombreValidador}: ${comentarioNuevo}]`;
+                } else if (comentarioNuevo) {
+                    comentarioFinal = `[Validación ${fechaActual} por ${nombreValidador}: ${comentarioNuevo}]`;
+                } else {
+                    comentarioFinal = comentarioExistente;
+                }
+
+                const validacionData = {
+                    validador: nombreValidador,  // Automático desde sesión
+                    transporte: document.getElementById('transporte').value.trim() || '',
                     firmada: document.getElementById('firmada').checked,
                     sellada: document.getElementById('sellada').checked,
-                    fechaBitacora: document.getElementById('fechaBitacora').value||'',
-                    noOperador: document.getElementById('noOperador').value.trim()||'',
-                    noViaje: document.getElementById('noViaje').value.trim()||'',
-                    boleta: document.getElementById('boleta').value.trim()||'',
-                    comentarios: document.getElementById('comentariosValidacion').value.trim()||'',
-                    tiendas, fechaValidacion: new Date().toLocaleString()
+                    fechaBitacora: document.getElementById('fechaBitacora').value || '',
+                    noOperador: document.getElementById('noOperador').value.trim() || '',
+                    noViaje: document.getElementById('noViaje').value.trim() || '',
+                    boleta: document.getElementById('boleta').value.trim() || '',
+                    comentarios: comentarioNuevo,  // Comentario de validación aparte
+                    tiendas: tiendas,
+                    fechaValidacion: fechaActual,
+                    validadoPor: nombreValidador
                 };
-                await db.collection('registros').doc(documentoIdActual).update({ validacion: v });
+
+                await db.collection('registros').doc(documentoIdActual).update({
+                    validacion: validacionData,
+                    'datosGenerales.comentarios': comentarioFinal  // Actualizar el campo de comentarios combinado
+                });
+
                 ocultarLoader(); alert('✅ Validación guardada');
                 esModoEdicion = false;
                 document.getElementById('validadoMessage').style.display = 'block';
                 document.getElementById('btnValidar').disabled = true;
                 bloquearCampos(true);
+
             } catch (e) { ocultarLoader(); alert('❌ Error: ' + e.message); }
         }
 
