@@ -452,9 +452,9 @@
                 </div>
                 <div class="header-derecha">
                     <div class="user-info" id="userInfo" style="display: none;">
-                        <span class="user-empleado" id="userEmpleado"></span>
-                        <button class="btn btn-danger" onclick="cerrarSesion()">SALIR</button>
-                    </div>
+    <span class="user-empleado" id="userEmpleado"></span>
+    <button class="btn btn-danger" onclick="cerrarSesion()">SALIR</button>
+</div>
                     <div id="loginButtons" style="display: flex; gap: 6px;">
                         <button class="btn btn-primary" onclick="window.location.href='login.html'">ACCEDER</button>
                     </div>
@@ -511,7 +511,7 @@
                     </div>
                     <div class="campo-group">
                         <label>COMENTARIOS</label>
-                        <input type="text" id="comentariosValidacion" placeholder="Observaciones">
+                        <input type="text" id="comentariosValidacion" placeholder="Observaciones de la validación">
                     </div>
                 </div>
             </div>
@@ -550,17 +550,17 @@
                 <div class="table-responsive">
                     <table id="tablaTiendas">
                         <thead>
-                            <tr>
-                                <th>CECO</th>
-                                <th>MARCA</th>
-                                <th>NOMBRE TIENDA</th>
-                                <th>REMISIÓN</th>
-                                <th>COMPLEMENTO</th>
-                                <th>CANTIDAD</th>
-                                <th>DIFERENCIA</th>
-                                <th>CNT. FÍSICA</th>
-                            </tr>
-                        </thead>
+    <tr>
+        <th>CECO</th>
+        <th>NOMBRE TIENDA</th>
+        <th>MARCA</th>
+        <th>REMISIÓN</th>
+        <th>COMPLEMENTO</th>
+        <th>CANTIDAD</th>
+        <th>DIFERENCIA</th>
+        <th>CNT. FÍSICA</th>
+    </tr>
+</thead>
                         <tbody id="tablaBody"></tbody>
                     </table>
                 </div>
@@ -572,6 +572,7 @@
         </div>
     </div>
 
+    <!-- LOADER -->
     <div id="loaderOverlay" class="loader-overlay">
         <div class="loader-container">
             <div class="loader-spinner"></div>
@@ -598,34 +599,43 @@
         let datosOrganigrama = [];
         let esModoEdicion = true;
 
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                document.getElementById('userInfo').style.display = 'flex';
-                
-                try {
-                    const snapshot = await db.collection('usuarios')
-                        .where('email', '==', user.email)
-                        .get();
-                    
-                    if (!snapshot.empty) {
-                        snapshot.forEach(doc => {
-                            document.getElementById('userEmpleado').textContent = doc.data().empleado || user.email;
-                        });
-                    } else {
-                        document.getElementById('userEmpleado').textContent = user.email;
-                    }
-                } catch (e) {
-                    document.getElementById('userEmpleado').textContent = user.email;
-                }
-                
-                document.getElementById('loginButtons').style.display = 'none';
-                await cargarOrganigrama();
+        // ============================================
+// VERIFICAR AUTENTICACIÓN - AHORA MUESTRA NOMBRE
+// ============================================
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        document.getElementById('userInfo').style.display = 'flex';
+        
+        try {
+            // Buscar en la colección 'usuarios' por email
+            const snapshot = await db.collection('usuarios')
+                .where('email', '==', user.email)
+                .get();
+            
+            if (!snapshot.empty) {
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    // Mostrar nombre si existe, si no, mostrar empleado, si no, mostrar email
+                    const nombreMostrar = data.nombre || data.empleado || user.email;
+                    document.getElementById('userEmpleado').textContent = nombreMostrar;
+                });
             } else {
-                document.getElementById('userInfo').style.display = 'none';
-                document.getElementById('loginButtons').style.display = 'flex';
-                limpiarTodo();
+                // Si no encuentra en usuarios, mostrar solo el email
+                document.getElementById('userEmpleado').textContent = user.email;
             }
-        });
+        } catch (e) {
+            console.log('Error buscando usuario:', e);
+            document.getElementById('userEmpleado').textContent = user.email;
+        }
+        
+        document.getElementById('loginButtons').style.display = 'none';
+        await cargarOrganigrama();
+    } else {
+        document.getElementById('userInfo').style.display = 'none';
+        document.getElementById('loginButtons').style.display = 'flex';
+        limpiarTodo();
+    }
+});
 
         function cerrarSesion() {
             auth.signOut().then(() => {
@@ -634,17 +644,12 @@
         }
 
         async function cargarOrganigrama() {
-            console.log('🔍 Cargando organigrama...');
             try {
                 const snapshot = await db.collection('organigrama').doc('lista_cecos').get();
                 if (snapshot.exists) {
                     const data = snapshot.data();
-                    if (data.datosCompletos && Array.isArray(data.datosCompletos)) {
-                        datosOrganigrama = data.datosCompletos;
-                        console.log(`✅ Cargados ${datosOrganigrama.length} registros`);
-                    } else {
-                        datosOrganigrama = [];
-                    }
+                    datosOrganigrama = data.datosCompletos || [];
+                    console.log(`✅ Organigrama cargado: ${datosOrganigrama.length} registros`);
                 } else {
                     datosOrganigrama = [];
                 }
@@ -654,7 +659,9 @@
         }
 
         function obtenerDatosTienda(ceco) {
-            if (!datosOrganigrama || datosOrganigrama.length === 0) return { nombre: '', marca: '' };
+            if (!datosOrganigrama || datosOrganigrama.length === 0) {
+                return { nombre: '', marca: '' };
+            }
             const tienda = datosOrganigrama.find(item => String(item.ceco).trim() === String(ceco).trim());
             return tienda ? { nombre: tienda.tienda || '', marca: tienda.marca || '' } : { nombre: '', marca: '' };
         }
@@ -709,79 +716,102 @@
         }
 
         function bloquearCampos(bloquear) {
-            const campos = ['validador', 'transporte', 'firmada', 'sellada', 'fechaBitacora', 'noOperador', 'noViaje', 'boleta', 'comentariosValidacion'];
+            const campos = [
+                'validador', 'transporte', 'firmada', 'sellada', 
+                'fechaBitacora', 'noOperador', 'noViaje', 'boleta',
+                'comentariosValidacion'
+            ];
+            
             campos.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.disabled = bloquear;
+                const elemento = document.getElementById(id);
+                if (elemento) elemento.disabled = bloquear;
             });
         }
 
         function mostrarRegistro(registro) {
-            document.getElementById('verNoEmpleado').textContent = registro.datosGenerales?.noEmpleado || 'S/N';
-            document.getElementById('verRuta').textContent = registro.datosGenerales?.ruta || 'S/N';
-            document.getElementById('verBitacora').textContent = registro.datosGenerales?.bitacora || 'S/N';
-            document.getElementById('verUnidad').textContent = registro.datosGenerales?.unidad || 'S/N';
-            document.getElementById('datosBitacora').style.display = 'block';
-            document.getElementById('tablaSection').style.display = 'block';
+    document.getElementById('verNoEmpleado').textContent = registro.datosGenerales?.noEmpleado || 'S/N';
+    document.getElementById('verRuta').textContent = registro.datosGenerales?.ruta || 'S/N';
+    document.getElementById('verBitacora').textContent = registro.datosGenerales?.bitacora || 'S/N';
+    document.getElementById('verUnidad').textContent = registro.datosGenerales?.unidad || 'S/N';
+    
+    document.getElementById('datosBitacora').style.display = 'block';
+    document.getElementById('tablaSection').style.display = 'block';
 
-            const tbody = document.getElementById('tablaBody');
-            tbody.innerHTML = '';
+    const tbody = document.getElementById('tablaBody');
+    tbody.innerHTML = '';
 
-            if (registro.registros && registro.registros.length > 0) {
-                registro.registros.forEach((tienda, index) => {
-                    const datos = obtenerDatosTienda(tienda.tienda);
-                    const fila = document.createElement('tr');
-                    
-                    let badgeClass = '';
-                    const marca = (datos.marca || '').toUpperCase();
-                    if (marca.includes('DOMINO')) badgeClass = 'badge-dominos';
-                    else if (marca.includes('STARBUCKS') || marca.includes('CHILIS')) badgeClass = 'badge-starbucks';
-                    
-                    const remisionPrev = (registro.validacion?.tiendas?.[index]?.remision) || '';
-                    const complementoPrev = (registro.validacion?.tiendas?.[index]?.complemento) || '';
-                    
-                    fila.innerHTML = `
-                        <td>${tienda.tienda || ''}</td>
-                        <td><span class="badge ${badgeClass}">${datos.marca || ''}</span></td>
-                        <td><span>${datos.nombre || ''}</span></td>
-                        <td><input type="text" class="table-input" value="${remisionPrev}" placeholder="Remisión" id="remision_${index}" ${!esModoEdicion ? 'disabled' : ''}></td>
-                        <td><input type="text" class="table-input" value="${complementoPrev}" placeholder="Complemento" id="complemento_${index}" ${!esModoEdicion ? 'disabled' : ''}></td>
-                        <td>${tienda.cantidadBitacora || 0}</td>
-                        <td>${tienda.diferencia || 0}</td>
-                        <td><strong>${tienda.cantidadFisica || 0}</strong></td>
-                    `;
-                    tbody.appendChild(fila);
-                });
+    if (registro.registros && registro.registros.length > 0) {
+        registro.registros.forEach((tienda, index) => {
+            const datos = obtenerDatosTienda(tienda.tienda);
+            
+            const fila = document.createElement('tr');
+            
+            // Badge para la marca (solo para visualización)
+            let badgeClass = '';
+            const marca = (datos.marca || '').toUpperCase();
+            if (marca.includes('DOMINO')) {
+                badgeClass = 'badge-dominos';
+            } else if (marca.includes('STARBUCKS') || marca.includes('CHILIS')) {
+                badgeClass = 'badge-starbucks';
             }
+            
+            const remisionPrev = (registro.validacion?.tiendas?.[index]?.remision) || '';
+            const complementoPrev = (registro.validacion?.tiendas?.[index]?.complemento) || '';
+            
+            // ORDEN CORREGIDO: CECO, NOMBRE TIENDA, MARCA, REMISIÓN, COMPLEMENTO, CANTIDAD, DIFERENCIA, CNT. FÍSICA
+            fila.innerHTML = `
+                <td>${tienda.tienda || ''}</td>
+                <td>${datos.nombre || ''}</td>
+                <td><span class="badge ${badgeClass}">${datos.marca || ''}</span></td>
+                <td><input type="text" class="table-input" value="${remisionPrev}" placeholder="Remisión" id="remision_${index}" ${!esModoEdicion ? 'disabled' : ''}></td>
+                <td><input type="text" class="table-input" value="${complementoPrev}" placeholder="Complemento" id="complemento_${index}" ${!esModoEdicion ? 'disabled' : ''}></td>
+                <td>${tienda.cantidadBitacora || 0}</td>
+                <td>${tienda.diferencia || 0}</td>
+                <td><strong>${tienda.cantidadFisica || 0}</strong></td>
+            `;
+            tbody.appendChild(fila);
+        });
+    }
 
-            if (registro.validacion) {
-                document.getElementById('validador').value = registro.validacion.validador || '';
-                document.getElementById('transporte').value = registro.validacion.transporte || '';
-                document.getElementById('firmada').checked = registro.validacion.firmada || false;
-                document.getElementById('sellada').checked = registro.validacion.sellada || false;
-                document.getElementById('fechaBitacora').value = registro.validacion.fechaBitacora || '';
-                document.getElementById('noOperador').value = registro.validacion.noOperador || '';
-                document.getElementById('noViaje').value = registro.validacion.noViaje || '';
-                document.getElementById('boleta').value = registro.validacion.boleta || '';
-                document.getElementById('comentariosValidacion').value = registro.validacion.comentarios || '';
-            }
-        }
+    if (registro.validacion) {
+        document.getElementById('validador').value = registro.validacion.validador || '';
+        document.getElementById('transporte').value = registro.validacion.transporte || '';
+        document.getElementById('firmada').checked = registro.validacion.firmada || false;
+        document.getElementById('sellada').checked = registro.validacion.sellada || false;
+        document.getElementById('fechaBitacora').value = registro.validacion.fechaBitacora || '';
+        document.getElementById('noOperador').value = registro.validacion.noOperador || '';
+        document.getElementById('noViaje').value = registro.validacion.noViaje || '';
+        document.getElementById('boleta').value = registro.validacion.boleta || '';
+        document.getElementById('comentariosValidacion').value = registro.validacion.comentarios || '';
+    }
+}
 
         async function guardarValidacion() {
-            if (!documentoIdActual) { alert('❌ Primero busca una bitácora'); return; }
-            if (!auth.currentUser) { alert('❌ Debes iniciar sesión'); return; }
-            if (!esModoEdicion) { alert('❌ Esta bitácora ya está validada'); return; }
+            if (!documentoIdActual) {
+                alert('❌ Primero busca una bitácora');
+                return;
+            }
+
+            if (!auth.currentUser) {
+                alert('❌ Debes iniciar sesión');
+                return;
+            }
+
+            if (!esModoEdicion) {
+                alert('❌ Esta bitácora ya está validada');
+                return;
+            }
 
             mostrarLoader('Guardando validación...');
 
             try {
                 const tiendasValidacion = [];
                 const filas = document.querySelectorAll('#tablaBody tr');
+                
                 filas.forEach((fila, index) => {
-                    tiendasValidacion.push({
-                        remision: document.getElementById(`remision_${index}`)?.value || '',
-                        complemento: document.getElementById(`complemento_${index}`)?.value || ''
-                    });
+                    const remision = document.getElementById(`remision_${index}`)?.value || '';
+                    const complemento = document.getElementById(`complemento_${index}`)?.value || '';
+                    tiendasValidacion.push({ remision, complemento });
                 });
 
                 const validacionData = {
@@ -799,9 +829,13 @@
                     validadoPor: auth.currentUser.email
                 };
 
-                await db.collection('registros').doc(documentoIdActual).update({ validacion: validacionData });
+                await db.collection('registros').doc(documentoIdActual).update({
+                    validacion: validacionData
+                });
+
                 ocultarLoader();
                 alert('✅ Validación guardada correctamente');
+                
                 esModoEdicion = false;
                 document.getElementById('validadoMessage').style.display = 'block';
                 document.getElementById('btnValidar').disabled = true;
@@ -810,20 +844,6 @@
             } catch (error) {
                 ocultarLoader();
                 alert('❌ Error al guardar: ' + error.message);
-            }
-        }
-
-        function cargarDatosValidacion(registro) {
-            if (registro.validacion) {
-                document.getElementById('validador').value = registro.validacion.validador || '';
-                document.getElementById('transporte').value = registro.validacion.transporte || '';
-                document.getElementById('firmada').checked = registro.validacion.firmada || false;
-                document.getElementById('sellada').checked = registro.validacion.sellada || false;
-                document.getElementById('fechaBitacora').value = registro.validacion.fechaBitacora || '';
-                document.getElementById('noOperador').value = registro.validacion.noOperador || '';
-                document.getElementById('noViaje').value = registro.validacion.noViaje || '';
-                document.getElementById('boleta').value = registro.validacion.boleta || '';
-                document.getElementById('comentariosValidacion').value = registro.validacion.comentarios || '';
             }
         }
 
@@ -866,6 +886,47 @@
             document.getElementById('btnValidar').disabled = false;
             esModoEdicion = true;
         }
+
+        // Función de depuración
+        setTimeout(() => {
+            console.log('🔍 DATOS ACTUALES:');
+            console.log('datosOrganigrama:', datosOrganigrama);
+            console.log('Cantidad:', datosOrganigrama.length);
+            if (datosOrganigrama.length > 0) {
+                console.log('Primer ceco:', datosOrganigrama[0].ceco);
+                console.log('Primer tienda:', datosOrganigrama[0].tienda);
+                console.log('Primer marca:', datosOrganigrama[0].marca);
+            }
+        }, 3000);
     </script>
+<script>
+// ============================================
+// FORZAR CARGA DE ORGANIGRAMA - SOLUCIÓN DEFINITIVA
+// ============================================
+(async function() {
+    console.log('🚀 FORZANDO CARGA DE ORGANIGRAMA...');
+    try {
+        const snap = await db.collection('organigrama').doc('lista_cecos').get();
+        if(snap.exists) {
+            window.datosOrganigrama = snap.data().datosCompletos || [];
+            console.log(`✅ CARGADOS ${window.datosOrganigrama.length} REGISTROS`);
+            
+            // Asignar también a la variable global del script
+            if(typeof datosOrganigrama !== 'undefined') {
+                datosOrganigrama = window.datosOrganigrama;
+            }
+        } else {
+            console.log('❌ No existe el documento');
+        }
+    } catch(e) {
+        console.error('❌ Error:', e);
+    }
+})();
+
+// Verificar cada 2 segundos
+setInterval(() => {
+    console.log('📊 datosOrganigrama:', datosOrganigrama?.length || 0, 'registros');
+}, 2000);
+</script>
 </body>
 </html>
