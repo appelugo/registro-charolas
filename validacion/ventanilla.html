@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale-1.5, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>Ventanilla - Validador de Charolas</title>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -27,15 +27,15 @@
             --success: #27AE60;
             --danger: #E74C3C;
             --warning: #F39C12;
-            --border-radius: 8px;
-            --box-shadow: 0 2px 8px rgba(10, 35, 66, 0.08);
+            --border-radius: 6px;
+            --box-shadow: 0 2px 6px rgba(10, 35, 66, 0.08);
         }
 
         body {
             background-color: var(--gray);
             color: var(--text-dark);
             line-height: 1.3;
-            padding: 15px;
+            padding: 12px;
             min-height: 100vh;
         }
 
@@ -45,45 +45,45 @@
             background-color: var(--white);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            padding: 20px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 30px);
+            height: calc(100vh - 24px);
         }
 
         /* ============================================ */
-        /* HEADER FIJO                                   */
+        /* HEADER FIJO - MÁS COMPACTO                   */
         /* ============================================ */
         .header-fijo {
             flex-shrink: 0;
             background-color: var(--white);
-            padding-bottom: 10px;
+            padding-bottom: 6px;
             border-bottom: 2px solid var(--accent);
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
 
         .header-superior {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .logo-small {
-            height: 40px;
+            height: 35px;
             width: auto;
         }
 
         .header-left h1 {
             color: var(--primary);
             font-weight: 600;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             margin: 0;
         }
 
@@ -95,15 +95,15 @@
         .header-derecha {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             background-color: var(--light);
-            padding: 6px 14px;
+            padding: 4px 12px;
             border-radius: 30px;
             border-left: 4px solid var(--accent);
         }
@@ -111,21 +111,21 @@
         .user-email {
             font-weight: 600;
             color: var(--primary);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .btn-validar-header {
             background-color: var(--warning);
             color: white;
             border: none;
-            border-radius: 6px;
-            padding: 8px 25px;
+            border-radius: 5px;
+            padding: 6px 18px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+            box-shadow: 0 2px 6px rgba(243, 156, 18, 0.3);
         }
 
         .btn-validar-header:hover {
@@ -133,65 +133,25 @@
             transform: translateY(-1px);
         }
 
-        /* ============================================ */
-        /* SECCIÓN DESPLAZABLE (SCROLL)                 */
-        /* ============================================ */
-        .scrollable {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 5px;
+        .btn-validar-header:disabled {
+            background-color: #95A5A6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         /* ============================================ */
-        /* BOTONES                                       */
-        /* ============================================ */
-        .btn {
-            padding: 6px 14px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            white-space: nowrap;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #0D2B4A;
-        }
-
-        .btn-danger {
-            background-color: var(--danger);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #C0392B;
-        }
-
-        /* ============================================ */
-        /* FORMULARIO COMPACTO                           */
+        /* FORMULARIO COMPACTO - UNA SOLA LÍNEA         */
         /* ============================================ */
         .form-compacto {
             background: linear-gradient(to right, var(--light), var(--white));
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
             border: 1px solid rgba(74, 137, 197, 0.15);
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
+            grid-template-columns: 1.2fr 0.8fr 0.8fr 0.6fr 0.8fr 0.8fr 0.8fr 0.8fr 1.2fr;
+            gap: 6px;
             align-items: center;
         }
 
@@ -203,8 +163,8 @@
         .campo-group label {
             font-weight: 600;
             color: var(--primary);
-            margin-bottom: 2px;
-            font-size: 0.65rem;
+            margin-bottom: 1px;
+            font-size: 0.6rem;
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
@@ -212,12 +172,12 @@
         .campo-group input, 
         .campo-group select,
         .campo-group .valor {
-            padding: 6px 10px;
+            padding: 4px 8px;
             border: 1.5px solid var(--gray);
-            border-radius: 6px;
-            font-size: 0.85rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
             background-color: var(--white);
-            height: 34px;
+            height: 30px;
         }
 
         .campo-group .valor {
@@ -229,34 +189,32 @@
 
         .campo-group.check-group {
             display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 15px;
-            height: 34px;
+            flex-direction: column;
+            gap: 4px;
+            height: auto;
         }
 
         .campo-group.check-group label {
             margin-bottom: 0;
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 0.75rem;
+            gap: 4px;
+            font-size: 0.7rem;
             text-transform: none;
             font-weight: 500;
         }
 
         .campo-group.check-group input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             margin: 0;
         }
 
-        /* Búsqueda especial */
+        /* Buscador más angosto y centrado */
         .busqueda-group {
             display: flex;
-            gap: 5px;
+            gap: 3px;
             align-items: flex-end;
-            grid-column: span 2;
         }
 
         .busqueda-group .campo-group {
@@ -267,15 +225,15 @@
             background-color: var(--accent);
             color: white;
             border: none;
-            border-radius: 6px;
-            width: 34px;
-            height: 34px;
+            border-radius: 5px;
+            width: 30px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 1rem;
+            font-size: 0.9rem;
             margin-bottom: 0;
         }
 
@@ -284,69 +242,91 @@
             transform: translateY(-1px);
         }
 
+        .btn-lupa:disabled {
+            background-color: #95A5A6;
+            cursor: not-allowed;
+        }
+
         /* ============================================ */
-        /* TABLA MEJORADA                                */
+        /* MENSAJES                                      */
+        /* ============================================ */
+        .validado-message {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+            padding: 6px 12px;
+            border-radius: 5px;
+            border-left: 4px solid var(--success);
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .mensaje-error {
+            color: var(--danger);
+            font-size: 0.75rem;
+            margin: 8px 0;
+            padding: 6px 10px;
+            background-color: rgba(231, 76, 60, 0.05);
+            border-radius: 5px;
+            border-left: 4px solid var(--danger);
+        }
+
+        /* ============================================ */
+        /* TABLA - ANCHO AUTOMÁTICO, SOLO TEXTO         */
         /* ============================================ */
         .tabla-section {
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .tabla-section h3 {
             color: var(--primary);
-            margin-bottom: 10px;
-            font-size: 1rem;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
             font-weight: 600;
         }
 
         .table-responsive {
             overflow-x: auto;
-            border-radius: 8px;
+            border-radius: 6px;
             border: 1px solid var(--gray);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1400px;
+            table-layout: auto;
+            min-width: 1000px;
         }
 
         th {
             background-color: var(--primary);
             color: var(--white);
-            padding: 8px 6px;
-            font-size: 0.7rem;
+            padding: 6px 4px;
+            font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 0.3px;
             text-align: center;
         }
 
         td {
-            padding: 6px;
+            padding: 5px 4px;
             border-bottom: 1px solid var(--gray);
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
 
-        .table-input {
-            width: 100%;
-            padding: 4px 6px;
-            border: 1.5px solid var(--gray);
-            border-radius: 4px;
-            font-size: 0.8rem;
-            text-align: center;
-        }
-
-        .table-input[readonly] {
-            background-color: #F0F4F8;
-            color: var(--text-dark);
-            border-color: #D5DBDB;
+        .texto-tabla {
+            padding: 4px 4px;
+            background-color: #F8FAFD;
+            border-radius: 3px;
+            font-size: 0.75rem;
         }
 
         .badge {
-            padding: 3px 8px;
+            padding: 2px 6px;
             border-radius: 50px;
             font-weight: 600;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
             display: inline-block;
         }
@@ -363,26 +343,9 @@
             border: 1px solid #006241;
         }
 
-        .validado-message {
-            background-color: rgba(39, 174, 96, 0.1);
-            color: var(--success);
-            padding: 10px;
-            border-radius: 6px;
-            border-left: 4px solid var(--success);
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .mensaje-error {
-            color: var(--danger);
-            font-size: 0.8rem;
-            margin: 10px 0;
-            padding: 8px;
-            background-color: rgba(231, 76, 60, 0.05);
-            border-radius: 6px;
-            border-left: 4px solid var(--danger);
-        }
-
+        /* ============================================ */
+        /* LOADER                                        */
+        /* ============================================ */
         .loader-overlay {
             position: fixed;
             top: 0;
@@ -399,21 +362,21 @@
 
         .loader-container {
             background-color: white;
-            padding: 20px 30px;
-            border-radius: 12px;
+            padding: 15px 25px;
+            border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .loader-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--light);
-            border-top: 4px solid var(--accent);
+            width: 35px;
+            height: 35px;
+            border: 3px solid var(--light);
+            border-top: 3px solid var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -424,19 +387,19 @@
         }
 
         .footer {
-            margin-top: 15px;
+            margin-top: 10px;
             color: var(--secondary);
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-align: right;
             border-top: 1px solid var(--gray);
-            padding-top: 10px;
+            padding-top: 6px;
             flex-shrink: 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- HEADER FIJO CON BOTÓN VALIDAR -->
+        <!-- HEADER FIJO -->
         <div class="header-fijo">
             <div class="header-superior">
                 <div class="header-left">
@@ -445,67 +408,79 @@
                 </div>
                 <div class="header-derecha">
                     <div class="user-info" id="userInfo" style="display: none;">
-                        <span class="user-email" id="userEmail"></span>
+                        <span class="user-email" id="userEmpleado"></span>
                         <button class="btn btn-danger" onclick="cerrarSesion()">SALIR</button>
                     </div>
-                    <div id="loginButtons" style="display: flex; gap: 8px;">
+                    <div id="loginButtons" style="display: flex; gap: 6px;">
                         <button class="btn btn-primary" onclick="window.location.href='login.html'">ACCEDER</button>
                     </div>
-                    <button class="btn-validar-header" onclick="guardarValidacion()">✅ VALIDAR</button>
+                    <button class="btn-validar-header" id="btnValidar" onclick="guardarValidacion()">✅ VALIDAR</button>
                 </div>
             </div>
 
-            <!-- FORMULARIO DE BÚSQUEDA Y DATOS GENERALES -->
+            <!-- FORMULARIO DE UNA SOLA LÍNEA -->
             <div class="form-compacto">
-                <!-- Búsqueda (2 columnas) -->
+                <!-- Buscador angosto (col 1) -->
                 <div class="busqueda-group">
                     <div class="campo-group">
                         <label>🔍 BITÁCORA</label>
-                        <input type="text" id="buscarBitacora" placeholder="Número de bitácora" onkeypress="if(event.key==='Enter'){buscarRegistro();}">
+                        <input type="text" id="buscarBitacora" placeholder="Número" onkeypress="if(event.key==='Enter'){buscarRegistro();}">
                     </div>
-                    <button class="btn-lupa" onclick="buscarRegistro()">🔍</button>
+                    <button class="btn-lupa" id="btnBuscar" onclick="buscarRegistro()">🔍</button>
                 </div>
 
-                <!-- Campos generales -->
+                <!-- VALIDADOR (col 2) -->
                 <div class="campo-group">
                     <label>VALIDADOR</label>
-                    <input type="text" id="validador" placeholder="Nombre del validador">
+                    <input type="text" id="validador" placeholder="Validador">
                 </div>
 
+                <!-- TRANSPORTE (col 3) -->
                 <div class="campo-group">
                     <label>TRANSPORTE</label>
                     <input type="text" id="transporte" placeholder="Transporte">
                 </div>
 
+                <!-- CHECKBOX en columna (col 4) -->
                 <div class="campo-group check-group">
                     <label><input type="checkbox" id="firmada" checked> FIRMADA</label>
                     <label><input type="checkbox" id="sellada" checked> SELLADA</label>
                 </div>
 
+                <!-- FECHA (col 5) -->
                 <div class="campo-group">
-                    <label>FECHA BITÁCORA</label>
+                    <label>FECHA</label>
                     <input type="date" id="fechaBitacora">
                 </div>
 
+                <!-- NO. OPERADOR (col 6) -->
                 <div class="campo-group">
-                    <label>NO. OPERADOR</label>
+                    <label>OPERADOR</label>
                     <input type="text" id="noOperador" placeholder="Operador">
                 </div>
 
+                <!-- NO. VIAJE (col 7) -->
                 <div class="campo-group">
-                    <label>NO. VIAJE</label>
+                    <label>VIAJE</label>
                     <input type="text" id="noViaje" placeholder="Viaje">
                 </div>
 
+                <!-- BOLETA (col 8) -->
                 <div class="campo-group">
                     <label>BOLETA</label>
                     <input type="text" id="boleta" placeholder="Boleta">
+                </div>
+
+                <!-- COMENTARIOS (col 9) -->
+                <div class="campo-group">
+                    <label>COMENTARIOS</label>
+                    <input type="text" id="comentariosValidacion" placeholder="Observaciones">
                 </div>
             </div>
         </div>
 
         <!-- SECCIÓN DESPLAZABLE -->
-        <div class="scrollable">
+        <div class="scrollable" style="flex: 1; overflow-y: auto; padding-right: 5px;">
             <!-- MENSAJE DE VALIDADO -->
             <div id="validadoMessage" class="validado-message" style="display: none;">
                 ✅ Esta bitácora ya fue validada
@@ -515,7 +490,7 @@
             <div id="mensajeError" class="mensaje-error" style="display: none;"></div>
 
             <!-- DATOS DE BITÁCORA (solo lectura) -->
-            <div class="form-compacto" id="datosBitacora" style="display: none;">
+            <div class="form-compacto" id="datosBitacora" style="display: none; grid-template-columns: repeat(4, 1fr);">
                 <div class="campo-group">
                     <label>NO. EMPLEADO</label>
                     <div class="valor" id="verNoEmpleado">—</div>
@@ -534,14 +509,14 @@
                 </div>
             </div>
 
-            <!-- TABLA DE TIENDAS CON CAMPOS DE VALIDACIÓN -->
+            <!-- TABLA DE TIENDAS (SOLO TEXTO) -->
             <div id="tablaSection" style="display: none;" class="tabla-section">
                 <h3>📋 VALIDACIÓN DE TIENDAS</h3>
                 <div class="table-responsive">
                     <table id="tablaTiendas">
                         <thead>
                             <tr>
-                                <th>TIENDA</th>
+                                <th>CECO</th>
                                 <th>NOMBRE TIENDA</th>
                                 <th>MARCA</th>
                                 <th>REMISIÓN</th>
@@ -557,7 +532,7 @@
             </div>
         </div>
 
-        <!-- FOOTER FIJO -->
+        <!-- FOOTER -->
         <div class="footer">
             Sistema de Validación de Registro de charolas V2.0 | E.Lugo 2026
         </div>
@@ -591,14 +566,34 @@
         let registroActual = null;
         let documentoIdActual = null;
         let datosOrganigrama = []; // Guardará { ceco, marca, nombreTienda }
+        let esModoEdicion = true;   // Si está validado, se bloquea
 
         // ============================================
-        // VERIFICAR AUTENTICACIÓN
+        // VERIFICAR AUTENTICACIÓN (con número de empleado)
         // ============================================
-        auth.onAuthStateChanged((user) => {
+        auth.onAuthStateChanged(async (user) => {
             if (user) {
+                // Buscar el empleado asociado al email (deberías tener una relación)
+                // Por ahora usamos el email, pero idealmente sería el número de empleado
                 document.getElementById('userInfo').style.display = 'flex';
-                document.getElementById('userEmail').textContent = user.email;
+                
+                // Intentar obtener el número de empleado desde Firestore
+                try {
+                    const snapshot = await db.collection('usuarios')
+                        .where('email', '==', user.email)
+                        .get();
+                    
+                    if (!snapshot.empty) {
+                        snapshot.forEach(doc => {
+                            document.getElementById('userEmpleado').textContent = doc.data().empleado || user.email;
+                        });
+                    } else {
+                        document.getElementById('userEmpleado').textContent = user.email;
+                    }
+                } catch (e) {
+                    document.getElementById('userEmpleado').textContent = user.email;
+                }
+                
                 document.getElementById('loginButtons').style.display = 'none';
                 cargarOrganigrama();
             } else {
@@ -615,7 +610,7 @@
         }
 
         // ============================================
-        // CARGAR ORGANIGRAMA COMPLETO
+        // CARGAR ORGANIGRAMA
         // ============================================
         async function cargarOrganigrama() {
             try {
@@ -639,7 +634,7 @@
             }
             const tienda = datosOrganigrama.find(t => t.ceco === ceco);
             return {
-                nombre: tienda?.nombreTienda || '',
+                nombre: tienda?.tienda || tienda?.nombreTienda || '',
                 marca: tienda?.marca || ''
             };
         }
@@ -676,11 +671,20 @@
                     documentoIdActual = doc.id;
                 });
 
+                // Verificar si ya está validado
                 if (registroActual.validacion) {
+                    esModoEdicion = false;
                     document.getElementById('validadoMessage').style.display = 'block';
+                    document.getElementById('btnValidar').disabled = true;
+                    document.getElementById('btnBuscar').disabled = false;
+                    bloquearCampos(true);
                     cargarDatosValidacion(registroActual);
                 } else {
+                    esModoEdicion = true;
                     document.getElementById('validadoMessage').style.display = 'none';
+                    document.getElementById('btnValidar').disabled = false;
+                    document.getElementById('btnBuscar').disabled = false;
+                    bloquearCampos(false);
                 }
 
                 mostrarRegistro(registroActual);
@@ -691,6 +695,24 @@
             } finally {
                 ocultarLoader();
             }
+        }
+
+        // ============================================
+        // BLOQUEAR/DESBLOQUEAR CAMPOS
+        // ============================================
+        function bloquearCampos(bloquear) {
+            const campos = [
+                'validador', 'transporte', 'firmada', 'sellada', 
+                'fechaBitacora', 'noOperador', 'noViaje', 'boleta',
+                'comentariosValidacion'
+            ];
+            
+            campos.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) {
+                    elemento.disabled = bloquear;
+                }
+            });
         }
 
         // ============================================
@@ -713,12 +735,17 @@
                     const datos = obtenerDatosTienda(tienda.tienda);
                     
                     const fila = document.createElement('tr');
+                    
+                    // Determinar si hay datos de validación previos
+                    const remision = (registro.validacion?.tiendas && registro.validacion.tiendas[index]?.remision) || '';
+                    const complemento = (registro.validacion?.tiendas && registro.validacion.tiendas[index]?.complemento) || '';
+                    
                     fila.innerHTML = `
                         <td>${tienda.tienda || ''}</td>
-                        <td><input type="text" class="table-input" value="${datos.nombre}" readonly placeholder="Nombre tienda"></td>
-                        <td><input type="text" class="table-input" value="${datos.marca}" readonly placeholder="Marca"></td>
-                        <td><input type="text" class="table-input" placeholder="Remisión" id="remision_${index}"></td>
-                        <td><input type="text" class="table-input" placeholder="Complemento" id="complemento_${index}"></td>
+                        <td><span class="texto-tabla">${datos.nombre || ''}</span></td>
+                        <td><span class="badge ${datos.marca === 'DOMINOS' ? 'badge-dominos' : 'badge-starbucks'}">${datos.marca || ''}</span></td>
+                        <td><span class="texto-tabla">${remision}</span></td>
+                        <td><span class="texto-tabla">${complemento}</span></td>
                         <td>${tienda.cantidadBitacora || 0}</td>
                         <td>${tienda.diferencia || 0}</td>
                         <td><strong>${tienda.cantidadFisica || 0}</strong></td>
@@ -727,13 +754,17 @@
                 });
             }
 
-            if (registro.validacion && registro.validacion.tiendas) {
-                registro.validacion.tiendas.forEach((item, index) => {
-                    if (document.getElementById(`remision_${index}`)) {
-                        document.getElementById(`remision_${index}`).value = item.remision || '';
-                        document.getElementById(`complemento_${index}`).value = item.complemento || '';
-                    }
-                });
+            // Cargar datos de validación si existen
+            if (registro.validacion) {
+                document.getElementById('validador').value = registro.validacion.validador || '';
+                document.getElementById('transporte').value = registro.validacion.transporte || '';
+                document.getElementById('firmada').checked = registro.validacion.firmada || false;
+                document.getElementById('sellada').checked = registro.validacion.sellada || false;
+                document.getElementById('fechaBitacora').value = registro.validacion.fechaBitacora || '';
+                document.getElementById('noOperador').value = registro.validacion.noOperador || '';
+                document.getElementById('noViaje').value = registro.validacion.noViaje || '';
+                document.getElementById('boleta').value = registro.validacion.boleta || '';
+                document.getElementById('comentariosValidacion').value = registro.validacion.comentarios || '';
             }
         }
 
@@ -751,20 +782,16 @@
                 return;
             }
 
+            if (!esModoEdicion) {
+                alert('❌ Esta bitácora ya está validada y no puede modificarse');
+                return;
+            }
+
             mostrarLoader('Guardando validación...');
 
             try {
-                const tiendasValidacion = [];
-                const filas = document.querySelectorAll('#tablaBody tr');
-                
-                filas.forEach((fila, index) => {
-                    const remision = document.getElementById(`remision_${index}`)?.value || '';
-                    const complemento = document.getElementById(`complemento_${index}`)?.value || '';
-                    tiendasValidacion.push({ remision, complemento });
-                });
-
                 const validacionData = {
-                    validador: document.getElementById('validador').value.trim() || auth.currentUser.email,
+                    validador: document.getElementById('validador').value.trim() || 'Validador',
                     transporte: document.getElementById('transporte').value.trim() || '',
                     firmada: document.getElementById('firmada').checked,
                     sellada: document.getElementById('sellada').checked,
@@ -772,7 +799,7 @@
                     noOperador: document.getElementById('noOperador').value.trim() || '',
                     noViaje: document.getElementById('noViaje').value.trim() || '',
                     boleta: document.getElementById('boleta').value.trim() || '',
-                    tiendas: tiendasValidacion,
+                    comentarios: document.getElementById('comentariosValidacion').value.trim() || '',
                     fechaValidacion: new Date().toLocaleString(),
                     validadoPor: auth.currentUser.email
                 };
@@ -783,7 +810,12 @@
 
                 ocultarLoader();
                 alert('✅ Validación guardada correctamente');
+                
+                // Bloquear edición
+                esModoEdicion = false;
                 document.getElementById('validadoMessage').style.display = 'block';
+                document.getElementById('btnValidar').disabled = true;
+                bloquearCampos(true);
 
             } catch (error) {
                 ocultarLoader();
@@ -804,6 +836,7 @@
                 document.getElementById('noOperador').value = registro.validacion.noOperador || '';
                 document.getElementById('noViaje').value = registro.validacion.noViaje || '';
                 document.getElementById('boleta').value = registro.validacion.boleta || '';
+                document.getElementById('comentariosValidacion').value = registro.validacion.comentarios || '';
             }
         }
 
@@ -844,7 +877,10 @@
             document.getElementById('noOperador').value = '';
             document.getElementById('noViaje').value = '';
             document.getElementById('boleta').value = '';
+            document.getElementById('comentariosValidacion').value = '';
             ocultarTodo();
+            document.getElementById('btnValidar').disabled = false;
+            esModoEdicion = true;
         }
     </script>
 </body>
