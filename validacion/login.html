@@ -25,7 +25,7 @@
             --text-dark: #1E2B3C;
             --success: #27AE60;
             --danger: #E74C3C;
-            --border-radius: 10px;
+            --border-radius: 8px;
             --box-shadow: 0 4px 12px rgba(10, 35, 66, 0.1);
         }
 
@@ -35,34 +35,34 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 15px;
         }
 
         .login-container {
             background-color: var(--white);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            padding: 40px 30px;
+            padding: 25px 25px;
             width: 100%;
-            max-width: 400px;
+            max-width: 380px;
             text-align: center;
         }
 
-        /* Logo centrado */
+        /* Logo más pequeño */
         .logo-container {
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
 
         .logo {
-            max-width: 120px;
+            max-width: 80px;
             height: auto;
             margin: 0 auto;
         }
 
         h1 {
             color: var(--primary);
-            font-size: 1.8rem;
-            margin-bottom: 5px;
+            font-size: 1.5rem;
+            margin-bottom: 3px;
         }
 
         h1 span {
@@ -72,14 +72,14 @@
 
         .subtitulo {
             color: var(--secondary);
-            font-size: 0.9rem;
-            margin-bottom: 30px;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
             border-bottom: 1px solid var(--gray);
-            padding-bottom: 15px;
+            padding-bottom: 10px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             text-align: left;
         }
 
@@ -87,92 +87,93 @@
             display: block;
             font-weight: 600;
             color: var(--primary);
-            margin-bottom: 5px;
-            font-size: 0.8rem;
+            margin-bottom: 3px;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--gray);
-            border-radius: 8px;
-            font-size: 1rem;
+            padding: 8px 12px;
+            border: 1.5px solid var(--gray);
+            border-radius: 6px;
+            font-size: 0.9rem;
             transition: all 0.3s;
         }
 
         .form-group input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(74, 137, 197, 0.1);
+            box-shadow: 0 0 0 2px rgba(74, 137, 197, 0.1);
         }
 
         .btn {
             width: 100%;
-            padding: 14px;
+            padding: 10px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             cursor: pointer;
             transition: all 0.3s;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(10, 35, 66, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(10, 35, 66, 0.2);
         }
 
         .btn-registro {
             background: transparent;
             color: var(--primary);
-            border: 2px solid var(--gray);
-            margin-top: 10px;
+            border: 1.5px solid var(--gray);
+            margin-top: 0;
+            font-size: 0.8rem;
+            padding: 8px;
         }
 
         .btn-registro:hover {
             background: var(--light);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .mensaje-error {
             color: var(--danger);
-            font-size: 0.85rem;
-            margin-top: 10px;
-            padding: 10px;
+            font-size: 0.75rem;
+            margin-top: 8px;
+            padding: 6px;
             background-color: rgba(231, 76, 60, 0.05);
-            border-radius: 6px;
-            border-left: 4px solid var(--danger);
+            border-radius: 4px;
+            border-left: 3px solid var(--danger);
             text-align: left;
         }
 
         .mensaje-exito {
             color: var(--success);
-            font-size: 0.85rem;
-            margin-top: 10px;
-            padding: 10px;
+            font-size: 0.75rem;
+            margin-top: 8px;
+            padding: 6px;
             background-color: rgba(39, 174, 96, 0.05);
-            border-radius: 6px;
-            border-left: 4px solid var(--success);
+            border-radius: 4px;
+            border-left: 3px solid var(--success);
             text-align: left;
         }
 
         .loader {
             display: none;
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--light);
-            border-top: 4px solid var(--accent);
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--light);
+            border-top: 3px solid var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin: 10px auto;
         }
 
         @keyframes spin {
@@ -181,20 +182,52 @@
         }
 
         .footer {
-            margin-top: 20px;
+            margin-top: 10px;
             color: var(--secondary);
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             border-top: 1px solid var(--gray);
-            padding-top: 15px;
+            padding-top: 8px;
+        }
+
+        /* Modal de registro más compacto */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 15px;
+        }
+
+        .modal-contenido {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 350px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-contenido h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.3rem;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <!-- Logo centrado -->
+        <!-- Logo centrado y más pequeño -->
         <div class="logo-container">
             <img src="logo.png" alt="Logo" class="logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <div style="display:none; color: var(--secondary); font-size:0.9rem; padding:10px;">[SISTEMA DE VALIDACIÓN]</div>
+            <div style="display:none; color: var(--secondary); font-size:0.8rem; padding:5px;">[SISTEMA]</div>
         </div>
 
         <h1>Acceso al <span>Sistema</span></h1>
@@ -219,14 +252,14 @@
         <div id="loader" class="loader"></div>
 
         <div class="footer">
-            Sistema de Validación de Registro de charolas V2.0 | E.Lugo 2026
+            Sistema de Validación V2.0 | E.Lugo 2026
         </div>
     </div>
 
-    <!-- Modal de Registro (oculto inicialmente) -->
-    <div id="modalRegistro" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
-        <div style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto;">
-            <h2 style="color: var(--primary); margin-bottom: 20px; text-align: center;">📝 Registro de Usuario</h2>
+    <!-- Modal de Registro compacto -->
+    <div id="modalRegistro" class="modal-overlay">
+        <div class="modal-contenido">
+            <h2>📝 Registro</h2>
             
             <div class="form-group">
                 <label>👤 NÚMERO DE EMPLEADO</label>
@@ -235,18 +268,18 @@
             
             <div class="form-group">
                 <label>🔐 CONTRASEÑA</label>
-                <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres">
+                <input type="password" id="regPassword" placeholder="Mínimo 4 caracteres">
             </div>
             
             <div class="form-group">
-                <label>👤 NOMBRE COMPLETO (Opcional)</label>
+                <label>👤 NOMBRE (Opcional)</label>
                 <input type="text" id="regNombre" placeholder="Nombre del usuario">
             </div>
             
             <button class="btn" onclick="registrarUsuario()">REGISTRAR</button>
             <button class="btn btn-registro" onclick="cerrarRegistro()">CANCELAR</button>
             
-            <div id="regMensaje" style="margin-top: 15px;"></div>
+            <div id="regMensaje" style="margin-top: 10px;"></div>
         </div>
     </div>
 
@@ -276,10 +309,9 @@
             mensajeDiv.className = esError ? 'mensaje-error' : 'mensaje-exito';
             mensajeDiv.style.display = 'block';
             
-            // Ocultar después de 5 segundos
             setTimeout(() => {
                 mensajeDiv.style.display = 'none';
-            }, 5000);
+            }, 4000);
         }
 
         function mostrarLoader(mostrar = true) {
@@ -292,7 +324,6 @@
 
         function cerrarRegistro() {
             document.getElementById('modalRegistro').style.display = 'none';
-            // Limpiar campos
             document.getElementById('regEmpleado').value = '';
             document.getElementById('regPassword').value = '';
             document.getElementById('regNombre').value = '';
@@ -300,14 +331,14 @@
         }
 
         // ============================================
-        // INICIAR SESIÓN (VALIDAR EN FIRESTORE)
+        // INICIAR SESIÓN
         // ============================================
         async function iniciarSesion() {
             const empleado = document.getElementById('empleado').value.trim();
             const password = document.getElementById('password').value.trim();
 
             if (!empleado || !password) {
-                mostrarMensaje('⚠️ Ingresa número de empleado y contraseña');
+                mostrarMensaje('⚠️ Completa todos los campos');
                 return;
             }
 
@@ -315,7 +346,6 @@
             document.getElementById('mensaje').style.display = 'none';
 
             try {
-                // Buscar en Firestore
                 const snapshot = await db.collection('usuarios')
                     .where('empleado', '==', empleado)
                     .get();
@@ -326,7 +356,6 @@
                     return;
                 }
 
-                // Verificar contraseña
                 let usuarioValido = false;
                 snapshot.forEach(doc => {
                     const data = doc.data();
@@ -338,9 +367,8 @@
                 mostrarLoader(false);
 
                 if (usuarioValido) {
-                    mostrarMensaje('✅ Acceso concedido. Redirigiendo...', false);
+                    mostrarMensaje('✅ Acceso concedido', false);
                     
-                    // Redirigir después de 1 segundo
                     setTimeout(() => {
                         window.location.href = 'https://appelugo.github.io/registro/validacion/ventanilla.html';
                     }, 1000);
@@ -350,13 +378,13 @@
 
             } catch (error) {
                 mostrarLoader(false);
-                mostrarMensaje('❌ Error al conectar: ' + error.message);
+                mostrarMensaje('❌ Error: ' + error.message);
                 console.error(error);
             }
         }
 
         // ============================================
-        // REGISTRAR NUEVO USUARIO
+        // REGISTRAR USUARIO
         // ============================================
         async function registrarUsuario() {
             const empleado = document.getElementById('regEmpleado').value.trim();
@@ -364,31 +392,28 @@
             const nombre = document.getElementById('regNombre').value.trim();
             const mensajeDiv = document.getElementById('regMensaje');
 
-            // Validaciones
             if (!empleado) {
-                mensajeDiv.innerHTML = '<span style="color: #E74C3C;">❌ El número de empleado es obligatorio</span>';
+                mensajeDiv.innerHTML = '<span style="color: #E74C3C;">❌ Empleado obligatorio</span>';
                 return;
             }
 
             if (!password || password.length < 4) {
-                mensajeDiv.innerHTML = '<span style="color: #E74C3C;">❌ La contraseña debe tener al menos 4 caracteres</span>';
+                mensajeDiv.innerHTML = '<span style="color: #E74C3C;">❌ Contraseña (mínimo 4 caracteres)</span>';
                 return;
             }
 
             mensajeDiv.innerHTML = '<span style="color: #666;">⏳ Verificando...</span>';
 
             try {
-                // Verificar si el empleado ya existe
                 const snapshot = await db.collection('usuarios')
                     .where('empleado', '==', empleado)
                     .get();
 
                 if (!snapshot.empty) {
-                    mensajeDiv.innerHTML = '<span style="color: #E74C3C;">❌ Este número de empleado ya está registrado</span>';
+                    mensajeDiv.innerHTML = '<span style="color: #E74C3C;">❌ Empleado ya registrado</span>';
                     return;
                 }
 
-                // Crear nuevo usuario
                 await db.collection('usuarios').add({
                     empleado: empleado,
                     password: password,
@@ -396,12 +421,11 @@
                     fechaRegistro: new Date().toLocaleString()
                 });
 
-                mensajeDiv.innerHTML = '<span style="color: #27AE60;">✅ Usuario registrado exitosamente</span>';
+                mensajeDiv.innerHTML = '<span style="color: #27AE60;">✅ Registro exitoso</span>';
                 
-                // Limpiar campos y cerrar modal después de 2 segundos
                 setTimeout(() => {
                     cerrarRegistro();
-                }, 2000);
+                }, 1500);
 
             } catch (error) {
                 mensajeDiv.innerHTML = '<span style="color: #E74C3C;">❌ Error: ' + error.message + '</span>';
