@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale-1.5, user-scalable=yes">
     <title>Ventanilla - Validador de Charolas</title>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -307,7 +307,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1200px;
+            min-width: 1400px;
         }
 
         th {
@@ -334,6 +334,12 @@
             border-radius: 4px;
             font-size: 0.8rem;
             text-align: center;
+        }
+
+        .table-input[readonly] {
+            background-color: #F0F4F8;
+            color: var(--text-dark);
+            border-color: #D5DBDB;
         }
 
         .badge {
@@ -445,7 +451,6 @@
                     <div id="loginButtons" style="display: flex; gap: 8px;">
                         <button class="btn btn-primary" onclick="window.location.href='login.html'">ACCEDER</button>
                     </div>
-                    <!-- BOTÓN VALIDAR EN EL HEADER -->
                     <button class="btn-validar-header" onclick="guardarValidacion()">✅ VALIDAR</button>
                 </div>
             </div>
@@ -461,7 +466,7 @@
                     <button class="btn-lupa" onclick="buscarRegistro()">🔍</button>
                 </div>
 
-                <!-- Campos generales (4 columnas) -->
+                <!-- Campos generales -->
                 <div class="campo-group">
                     <label>VALIDADOR</label>
                     <input type="text" id="validador" placeholder="Nombre del validador">
@@ -499,7 +504,7 @@
             </div>
         </div>
 
-        <!-- SECCIÓN DESPLAZABLE (SOLO ESTO HACE SCROLL) -->
+        <!-- SECCIÓN DESPLAZABLE -->
         <div class="scrollable">
             <!-- MENSAJE DE VALIDADO -->
             <div id="validadoMessage" class="validado-message" style="display: none;">
@@ -585,7 +590,7 @@
 
         let registroActual = null;
         let documentoIdActual = null;
-        let listaCECOs = []; // Para cargar nombres de tiendas y marcas
+        let datosOrganigrama = []; // Guardará { ceco, marca, nombreTienda }
 
         // ============================================
         // VERIFICAR AUTENTICACIÓN
@@ -595,7 +600,7 @@
                 document.getElementById('userInfo').style.display = 'flex';
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('loginButtons').style.display = 'none';
-                cargarOrganigrama(); // Cargar datos de tiendas
+                cargarOrganigrama();
             } else {
                 document.getElementById('userInfo').style.display = 'none';
                 document.getElementById('loginButtons').style.display = 'flex';
@@ -610,18 +615,33 @@
         }
 
         // ============================================
-        // CARGAR ORGANIGRAMA (nombre tienda y marca)
+        // CARGAR ORGANIGRAMA COMPLETO
         // ============================================
         async function cargarOrganigrama() {
             try {
                 const snapshot = await db.collection('organigrama').doc('lista_cecos').get();
                 if (snapshot.exists) {
-                    listaCECOs = snapshot.data().cecos || [];
-                    console.log(`✅ Organigrama cargado: ${listaCECOs.length} tiendas`);
+                    const data = snapshot.data();
+                    datosOrganigrama = data.datosCompletos || [];
+                    console.log(`✅ Organigrama cargado: ${datosOrganigrama.length} registros`);
                 }
             } catch (error) {
                 console.error('Error cargando organigrama:', error);
             }
+        }
+
+        // ============================================
+        // OBTENER DATOS DE TIENDA POR CECO
+        // ============================================
+        function obtenerDatosTienda(ceco) {
+            if (!datosOrganigrama || datosOrganigrama.length === 0) {
+                return { nombre: '', marca: '' };
+            }
+            const tienda = datosOrganigrama.find(t => t.ceco === ceco);
+            return {
+                nombre: tienda?.nombreTienda || '',
+                marca: tienda?.marca || ''
+            };
         }
 
         // ============================================
@@ -656,7 +676,6 @@
                     documentoIdActual = doc.id;
                 });
 
-                // Verificar si ya fue validado
                 if (registroActual.validacion) {
                     document.getElementById('validadoMessage').style.display = 'block';
                     cargarDatosValidacion(registroActual);
@@ -675,10 +694,9 @@
         }
 
         // ============================================
-        // MOSTRAR REGISTRO
+        // MOSTRAR REGISTRO (CON NOMBRE Y MARCA AUTOMÁTICOS)
         // ============================================
         function mostrarRegistro(registro) {
-            // Datos de bitácora (solo lectura)
             document.getElementById('verNoEmpleado').textContent = registro.datosGenerales?.noEmpleado || 'S/N';
             document.getElementById('verRuta').textContent = registro.datosGenerales?.ruta || 'S/N';
             document.getElementById('verBitacora').textContent = registro.datosGenerales?.bitacora || 'S/N';
@@ -687,21 +705,18 @@
             document.getElementById('datosBitacora').style.display = 'grid';
             document.getElementById('tablaSection').style.display = 'block';
 
-            // Generar tabla con campos de validación
             const tbody = document.getElementById('tablaBody');
             tbody.innerHTML = '';
 
             if (registro.registros && registro.registros.length > 0) {
                 registro.registros.forEach((tienda, index) => {
-                    // Buscar datos de organigrama (simulado - aquí deberías buscar en tu array)
-                    const nombreTienda = tienda.tienda || '';
-                    const marca = tienda.tipo || '';
-
+                    const datos = obtenerDatosTienda(tienda.tienda);
+                    
                     const fila = document.createElement('tr');
                     fila.innerHTML = `
                         <td>${tienda.tienda || ''}</td>
-                        <td><input type="text" class="table-input" value="${nombreTienda}" placeholder="Nombre tienda" id="nombreTienda_${index}"></td>
-                        <td><input type="text" class="table-input" value="${marca}" placeholder="Marca" id="marca_${index}"></td>
+                        <td><input type="text" class="table-input" value="${datos.nombre}" readonly placeholder="Nombre tienda"></td>
+                        <td><input type="text" class="table-input" value="${datos.marca}" readonly placeholder="Marca"></td>
                         <td><input type="text" class="table-input" placeholder="Remisión" id="remision_${index}"></td>
                         <td><input type="text" class="table-input" placeholder="Complemento" id="complemento_${index}"></td>
                         <td>${tienda.cantidadBitacora || 0}</td>
@@ -712,31 +727,18 @@
                 });
             }
 
-            // Si ya hay datos de validación guardados, cargarlos
-            if (registro.validacion) {
-                document.getElementById('validador').value = registro.validacion.validador || '';
-                document.getElementById('transporte').value = registro.validacion.transporte || '';
-                document.getElementById('firmada').checked = registro.validacion.firmada || false;
-                document.getElementById('sellada').checked = registro.validacion.sellada || false;
-                document.getElementById('fechaBitacora').value = registro.validacion.fechaBitacora || '';
-                document.getElementById('noOperador').value = registro.validacion.noOperador || '';
-                document.getElementById('noViaje').value = registro.validacion.noViaje || '';
-                document.getElementById('boleta').value = registro.validacion.boleta || '';
-
-                // Cargar remisiones y complementos
-                if (registro.validacion.tiendas) {
-                    registro.validacion.tiendas.forEach((item, index) => {
-                        if (document.getElementById(`remision_${index}`)) {
-                            document.getElementById(`remision_${index}`).value = item.remision || '';
-                            document.getElementById(`complemento_${index}`).value = item.complemento || '';
-                        }
-                    });
-                }
+            if (registro.validacion && registro.validacion.tiendas) {
+                registro.validacion.tiendas.forEach((item, index) => {
+                    if (document.getElementById(`remision_${index}`)) {
+                        document.getElementById(`remision_${index}`).value = item.remision || '';
+                        document.getElementById(`complemento_${index}`).value = item.complemento || '';
+                    }
+                });
             }
         }
 
         // ============================================
-        // GUARDAR VALIDACIÓN (botón del header)
+        // GUARDAR VALIDACIÓN
         // ============================================
         async function guardarValidacion() {
             if (!documentoIdActual) {
@@ -752,7 +754,6 @@
             mostrarLoader('Guardando validación...');
 
             try {
-                // Recolectar datos de tiendas
                 const tiendasValidacion = [];
                 const filas = document.querySelectorAll('#tablaBody tr');
                 
@@ -762,7 +763,6 @@
                     tiendasValidacion.push({ remision, complemento });
                 });
 
-                // Crear objeto de validación
                 const validacionData = {
                     validador: document.getElementById('validador').value.trim() || auth.currentUser.email,
                     transporte: document.getElementById('transporte').value.trim() || '',
@@ -777,15 +777,12 @@
                     validadoPor: auth.currentUser.email
                 };
 
-                // Guardar en Firestore (actualizando el documento)
                 await db.collection('registros').doc(documentoIdActual).update({
                     validacion: validacionData
                 });
 
                 ocultarLoader();
                 alert('✅ Validación guardada correctamente');
-                
-                // Mostrar mensaje de validado
                 document.getElementById('validadoMessage').style.display = 'block';
 
             } catch (error) {
