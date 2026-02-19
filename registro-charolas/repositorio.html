@@ -36,7 +36,7 @@
             background-color: var(--gray);
             color: var(--text-dark);
             line-height: 1.4;
-            padding: 20px;
+            padding: 15px;
             min-height: 100vh;
         }
 
@@ -46,7 +46,19 @@
             background-color: var(--white);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            padding: 25px;
+            padding: 15px; /* Reducido */
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 30px);
+        }
+
+        /* ============================================ */
+        /* HEADER FIJO - TODO LO QUE ESTÁ ARRIBA DE LA TABLA */
+        /* ============================================ */
+        .fixed-header {
+            flex-shrink: 0;
+            background-color: var(--white);
+            padding-bottom: 5px;
         }
 
         .header {
@@ -54,27 +66,27 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid var(--accent);
+            margin-bottom: 8px; /* Reducido */
+            padding-bottom: 8px; /* Reducido */
+            border-bottom: 2px solid var(--accent);
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             flex-wrap: wrap;
         }
 
         .logo-small {
-            max-width: 70px;
+            max-width: 60px; /* Reducido */
             height: auto;
         }
 
         .header h1 {
             color: var(--primary);
             font-weight: 600;
-            font-size: 1.8rem;
+            font-size: 1.5rem; /* Reducido */
             margin: 0;
         }
 
@@ -83,6 +95,258 @@
             font-weight: 300;
         }
 
+        .btn-group {
+            display: flex;
+            gap: 8px; /* Reducido */
+            flex-wrap: wrap;
+        }
+
+        /* ============================================ */
+        /* FECHA FIJA - JUSTO ARRIBA DE LA TABLA */
+        /* ============================================ */
+        .fecha-fija {
+            background-color: var(--white);
+            padding: 3px 0 5px 0;
+            margin-bottom: 5px;
+            border-bottom: 1px solid var(--gray);
+            font-size: 0.7rem;
+            color: var(--secondary);
+            text-align: right;
+            position: sticky;
+            top: 0;
+            z-index: 15;
+        }
+
+        /* ============================================ */
+        /* ESTADÍSTICAS COMPACTAS */
+        /* ============================================ */
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px; /* Reducido */
+            margin-bottom: 8px; /* Reducido */
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--light), var(--white));
+            padding: 6px 12px; /* Reducido */
+            border-radius: 8px; /* Reducido */
+            border-left: 4px solid var(--accent); /* Reducido */
+            box-shadow: var(--box-shadow);
+            flex: 1 1 160px; /* Reducido */
+        }
+
+        .stat-card.dominos {
+            border-left-color: var(--dominos);
+        }
+
+        .stat-card.starbucks {
+            border-left-color: var(--starbucks);
+        }
+
+        .stat-label {
+            font-size: 0.65rem; /* Reducido */
+            text-transform: uppercase;
+            color: var(--secondary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-number {
+            font-size: 1.3rem; /* Reducido */
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+
+        .stat-sub {
+            font-size: 0.65rem; /* Reducido */
+            color: var(--secondary);
+            margin-top: 2px; /* Reducido */
+        }
+
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px; /* Reducido */
+            gap: 10px; /* Reducido */
+        }
+
+        .btn {
+            padding: 6px 14px; /* Reducido */
+            border: none;
+            border-radius: 6px; /* Reducido */
+            font-weight: 600;
+            font-size: 0.75rem; /* Reducido */
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-info {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: #F39C12;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px); /* Reducido */
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Botón de eliminar del header (solo icono) */
+        .btn-icono {
+            padding: 6px 10px;
+            font-size: 1rem;
+        }
+
+        /* ============================================ */
+        /* TABLA - MÁS REGISTROS VISIBLES */
+        /* ============================================ */
+        .table-section {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            overflow-y: auto;
+            border-radius: 8px; /* Reducido */
+            border: 1px solid var(--gray);
+            max-height: 500px; /* Aumentado para ver más registros */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 8px; /* Reducido */
+            font-size: 0.7rem; /* Reducido */
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 6px 8px; /* Reducido */
+            border-bottom: 1px solid var(--gray);
+            font-size: 0.8rem; /* Reducido */
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        tr:hover td {
+            background-color: var(--light);
+        }
+
+        .badge {
+            padding: 2px 8px; /* Reducido */
+            border-radius: 50px;
+            font-size: 0.65rem; /* Reducido */
+            font-weight: 600;
+            display: inline-block;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .badge-dominos {
+            background-color: rgba(0, 165, 176, 0.1);
+            color: var(--dominos);
+            border: 1px solid var(--dominos);
+        }
+
+        .badge-starbucks {
+            background-color: rgba(0, 98, 65, 0.1);
+            color: var(--starbucks);
+            border: 1px solid var(--starbucks);
+        }
+
+        .badge-turno {
+            background-color: var(--primary);
+            color: white;
+            padding: 2px 6px; /* Reducido */
+            border-radius: 20px;
+            font-size: 0.6rem; /* Reducido */
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px; /* Reducido */
+            color: var(--secondary);
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem; /* Reducido */
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .btn-accion {
+            padding: 3px 8px; /* Reducido */
+            font-size: 0.6rem; /* Reducido */
+            white-space: nowrap;
+        }
+
+        .footer {
+            margin-top: 10px; /* Reducido */
+            color: var(--secondary);
+            font-size: 0.65rem; /* Reducido */
+            text-align: right;
+            border-top: 1px solid var(--gray);
+            padding-top: 8px; /* Reducido */
+            flex-shrink: 0;
+        }
+
+        /* ============================================ */
+        /* MODALES (sin cambios) */
+        /* ============================================ */
         .password-modal {
             position: fixed;
             top: 0;
@@ -129,244 +393,6 @@
             display: flex;
             gap: 10px;
             justify-content: center;
-        }
-
-        .stats-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--light), var(--white));
-            padding: 10px 20px;
-            border-radius: 10px;
-            border-left: 5px solid var(--accent);
-            box-shadow: var(--box-shadow);
-            flex: 1 1 180px;
-        }
-
-        .stat-card.dominos {
-            border-left-color: var(--dominos);
-        }
-
-        .stat-card.starbucks {
-            border-left-color: var(--starbucks);
-        }
-
-        .stat-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: var(--secondary);
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .stat-number {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--primary);
-            line-height: 1.1;
-        }
-
-        .stat-sub {
-            font-size: 0.7rem;
-            color: var(--secondary);
-            margin-top: 3px;
-        }
-
-        .filtro-fechas {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-            background-color: var(--light);
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .filtro-item {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .filtro-item label {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            font-weight: 600;
-            color: var(--secondary);
-            letter-spacing: 0.5px;
-        }
-
-        .filtro-item input {
-            padding: 6px 10px;
-            border: 1.5px solid var(--gray);
-            border-radius: 6px;
-            font-size: 0.85rem;
-        }
-
-        .action-bar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 15px;
-        }
-
-        .btn {
-            padding: 8px 18px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            white-space: nowrap;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-success {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .btn-danger {
-            background-color: var(--danger);
-            color: white;
-        }
-
-        .btn-info {
-            background-color: var(--accent);
-            color: white;
-        }
-
-        .btn-warning {
-            background-color: #F39C12;
-            color: white;
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary);
-            color: white;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-            overflow-y: auto;
-            border-radius: 12px;
-            border: 1px solid var(--gray);
-            max-height: 400px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: auto;
-        }
-
-        th {
-            background-color: var(--primary);
-            color: white;
-            padding: 12px 10px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            text-align: left;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            white-space: nowrap;
-        }
-
-        td {
-            padding: 10px;
-            border-bottom: 1px solid var(--gray);
-            font-size: 0.85rem;
-            vertical-align: middle;
-            white-space: nowrap;
-        }
-
-        tr:hover td {
-            background-color: var(--light);
-        }
-
-        .badge {
-            padding: 3px 10px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            display: inline-block;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        .badge-dominos {
-            background-color: rgba(0, 165, 176, 0.1);
-            color: var(--dominos);
-            border: 1px solid var(--dominos);
-        }
-
-        .badge-starbucks {
-            background-color: rgba(0, 98, 65, 0.1);
-            color: var(--starbucks);
-            border: 1px solid var(--starbucks);
-        }
-
-        .badge-turno {
-            background-color: var(--primary);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 0.65rem;
-            display: inline-block;
-            white-space: nowrap;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            color: var(--secondary);
-        }
-
-        .empty-state h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-
-        .footer {
-            margin-top: 20px;
-            color: var(--secondary);
-            font-size: 0.7rem;
-            text-align: right;
-            border-top: 1px solid var(--gray);
-            padding-top: 15px;
         }
 
         .modal {
@@ -456,117 +482,116 @@
             border-bottom: 1px solid var(--gray);
         }
 
-        .btn-accion {
-            padding: 4px 10px;
-            font-size: 0.65rem;
-            white-space: nowrap;
-        }
-
         @media screen and (max-width: 768px) {
             body { padding: 10px; }
-            .container { padding: 15px; }
-            .header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .container { padding: 12px; }
+            .header { flex-direction: column; align-items: flex-start; gap: 8px; }
             .header-left { width: 100%; justify-content: center; }
-            .header h1 { font-size: 1.4rem; }
+            .header h1 { font-size: 1.3rem; }
             .action-bar { flex-direction: column; align-items: flex-start; }
             .btn-group { width: 100%; }
-            .btn { flex: 1; font-size: 0.7rem; }
-            .filtro-fechas { flex-direction: column; align-items: stretch; }
-            .filtro-item { width: 100%; }
-            .filtro-item input { width: 100%; }
+            .btn { flex: 1; font-size: 0.65rem; }
             td, th { white-space: normal; word-break: break-word; }
             .badge { white-space: normal; }
             .badge-turno { white-space: normal; }
         }
 
         @media screen and (max-width: 480px) {
-            .header h1 { font-size: 1.2rem; }
-            .stat-number { font-size: 1.2rem; }
-            .btn { font-size: 0.65rem; padding: 6px 10px; }
-            .modal-content { padding: 20px; }
+            .header h1 { font-size: 1.1rem; }
+            .stat-number { font-size: 1.1rem; }
+            .btn { font-size: 0.6rem; padding: 5px 8px; }
+            .modal-content { padding: 15px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-    <div class="header-left">
-        <img src="logo.png" alt="Logo" style="height: 50px; width: auto;">
-        <h1>Registro de <span>Charolas</span></h1>
-    </div>
-    <div class="btn-group">
-        <button class="btn btn-info" onclick="window.location.href='formulario.html'">
-            📝 NUEVO REGISTRO
-        </button>
-        <!-- Botón de eliminar con icono 🗑️ al lado de nuevo registro -->
-        <button class="btn btn-danger" onclick="toggleModoEliminacion()" id="btnEliminarHeader" style="padding: 8px 12px;">
-            🗑️
-        </button>
-    </div>
-</div>
+        <!-- SECCIÓN FIJA - TODO HASTA EL ENCABEZADO DE LA TABLA -->
+        <div class="fixed-header">
+            <div class="header">
+                <div class="header-left">
+                    <img src="logo.png" alt="Logo" style="height: 45px; width: auto;" class="logo-small">
+                    <h1>Registro de <span>Charolas</span></h1>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-info" onclick="window.location.href='formulario.html'">
+                        📝 NUEVO REGISTRO
+                    </button>
+                    <!-- Botón de eliminar con icono 🗑️ (sin texto) -->
+                    <button class="btn btn-danger btn-icono" onclick="toggleModoEliminacion()" id="btnEliminarHeader" style="padding: 6px 12px;">
+                        🗑️
+                    </button>
+                </div>
+            </div>
 
-<!-- Fecha de actualización debajo de los botones -->
-<div style="text-align: right; margin-top: -15px; margin-bottom: 15px;">
-    <span style="color: var(--secondary); font-size: 0.75rem;" id="fechaActualizacion"></span>
-</div>
-        <div class="stats-container" id="statsContainer">
-            <div class="stat-card">
-                <div class="stat-label">Registros HOY</div>
-                <div class="stat-number" id="totalRegistrosHoy">0</div>
-                <div class="stat-sub" id="turnoActualStats">TURNO ACTUAL</div>
+            <!-- FECHA FIJA - JUSTO ARRIBA DE LA TABLA -->
+            <div class="fecha-fija" id="fechaActualizacion"></div>
+
+            <!-- ESTADÍSTICAS COMPACTAS -->
+            <div class="stats-container" id="statsContainer">
+                <div class="stat-card">
+                    <div class="stat-label">Registros HOY</div>
+                    <div class="stat-number" id="totalRegistrosHoy">0</div>
+                    <div class="stat-sub" id="turnoActualStats">TURNO ACTUAL</div>
+                </div>
+                <div class="stat-card dominos">
+                    <div class="stat-label">DOMINO'S - HOY</div>
+                    <div class="stat-number" id="totalDominosHoy">0</div>
+                    <div class="stat-sub" id="turnoDominos">TURNO ACTUAL</div>
+                </div>
+                <div class="stat-card starbucks">
+                    <div class="stat-label">STARBUCKS - HOY</div>
+                    <div class="stat-number" id="totalStarbucksHoy">0</div>
+                    <div class="stat-sub" id="turnoStarbucks">TURNO ACTUAL</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tiendas HOY</div>
+                    <div class="stat-number" id="totalTiendasHoy">0</div>
+                    <div class="stat-sub">Capturadas hoy</div>
+                </div>
             </div>
-            <div class="stat-card dominos">
-                <div class="stat-label">DOMINO'S - HOY</div>
-                <div class="stat-number" id="totalDominosHoy">0</div>
-                <div class="stat-sub" id="turnoDominos">TURNO ACTUAL</div>
-            </div>
-            <div class="stat-card starbucks">
-                <div class="stat-label">STARBUCKS - HOY</div>
-                <div class="stat-number" id="totalStarbucksHoy">0</div>
-                <div class="stat-sub" id="turnoStarbucks">TURNO ACTUAL</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Tiendas HOY</div>
-                <div class="stat-number" id="totalTiendasHoy">0</div>
-                <div class="stat-sub">Capturadas hoy</div>
+
+            <!-- BARRA DE ACCIÓN (ELIMINAR TODOS) -->
+            <div class="action-bar">
+                <div class="btn-group" id="botonesEliminarTodo" style="display: none;">
+                    <button class="btn btn-danger" onclick="eliminarTodosRegistros()">
+                        🗑️ ELIMINAR TODOS
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="action-bar">
-    <div class="btn-group" id="botonesEliminarTodo" style="display: none;">
-        <button class="btn btn-danger" onclick="eliminarTodosRegistros()">
-            🗑️ ELIMINAR TODOS
-        </button>
-    </div>
-</div>
-
-        <div class="table-responsive">
-            <table id="tablaRepositorio">
-                <thead>
-                    <tr>
-                        <th>Fecha/Hora</th>
-                        <th>Turno</th>
-                        <th>Empleado</th>
-                        <th>Ruta</th>
-                        <th>Bitácora</th>
-                        <th>Unidad</th>
-                        <th>Comentarios</th>
-                        <th>Tiendas</th>
-                        <th>Domino's</th>
-                        <th>Starbucks</th>
-                        <th>Ver</th>
-                        <th id="headerEliminar" style="display: none;">Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaBody"></tbody>
-            </table>
+        <!-- SECCIÓN DE TABLA CON SCROLL -->
+        <div class="table-section">
+            <div class="table-responsive">
+                <table id="tablaRepositorio">
+                    <thead>
+                        <tr>
+                            <th>Fecha/Hora</th>
+                            <th>Turno</th>
+                            <th>Empleado</th>
+                            <th>Ruta</th>
+                            <th>Bitácora</th>
+                            <th>Unidad</th>
+                            <th>Comentarios</th>
+                            <th>Tiendas</th>
+                            <th>Domino's</th>
+                            <th>Starbucks</th>
+                            <th>Ver</th>
+                            <th id="headerEliminar" style="display: none;">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaBody"></tbody>
+                </table>
+            </div>
         </div>
-
+        
         <div class="footer">
             Sistema de control de Registro de retorno de charolas V2.0 | E.Lugo 2026 Derechos reservados
         </div>
     </div>
 
+    <!-- MODAL DE CONTRASEÑA -->
     <div id="passwordModal" class="password-modal">
         <div class="password-container">
             <h3>🔐 ACCESO RESTRINGIDO</h3>
@@ -579,6 +604,7 @@
         </div>
     </div>
 
+    <!-- MODAL DE DETALLE -->
     <div id="detalleModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -695,10 +721,7 @@
             if (modoEliminacionActivo) {
                 modoEliminacionActivo = false;
                 ocultarBotonesEliminar();
-                const btnEliminar = document.getElementById('btnEliminar');
-                btnEliminar.innerHTML = '🔐 ELIMINAR REGISTROS';
-                btnEliminar.classList.remove('btn-danger');
-                btnEliminar.classList.add('btn-warning');
+                // Cambiar texto del botón del header (no hay texto, solo icono)
                 mostrarToast('🔒 Modo eliminación desactivado', '#F39C12');
             } else {
                 mostrarPasswordModal();
@@ -721,10 +744,6 @@
                 modoEliminacionActivo = true;
                 cerrarPasswordModal();
                 mostrarBotonesEliminar();
-                const btnEliminar = document.getElementById('btnEliminar');
-                btnEliminar.innerHTML = '🔓 DESACTIVAR MODO ELIMINACIÓN';
-                btnEliminar.classList.remove('btn-warning');
-                btnEliminar.classList.add('btn-danger');
                 mostrarToast('🔐 Modo eliminación activado', '#27AE60');
             } else {
                 alert('❌ Contraseña incorrecta');
@@ -742,11 +761,12 @@
                 right: 20px;
                 background-color: ${color};
                 color: white;
-                padding: 12px 22px;
+                padding: 10px 18px;
                 border-radius: 8px;
                 box-shadow: 0 5px 15px rgba(0,0,0,0.2);
                 z-index: 9999;
                 animation: slideIn 0.3s;
+                font-size: 0.85rem;
             `;
             document.body.appendChild(toast);
             setTimeout(() => { toast.remove(); }, 3000);
@@ -835,7 +855,7 @@
                             </td>
                             <td id="celdaEliminar_${registro.id}" style="display: ${displayEliminar}; text-align: center;">
                                 <button class="btn btn-danger btn-accion" onclick="eliminarRegistro('${registro.id}')">
-                                    🗑️ ELIMINAR
+                                    🗑️
                                 </button>
                             </td>
                         </tr>
@@ -998,7 +1018,7 @@
                 return;
             }
             if (!confirm('⚠️ ¿ESTÁS SEGURO?\n\nEsto eliminará TODOS los registros guardados permanentemente.\n\nEsta acción NO se puede deshacer.')) return;
-            if (!confirm('ÚLTIMA CONFIRMACIÓN:\n\n¿Eliminar toda la base de datos?')) return;
+            if (!confirm('ÚLTINA CONFIRMACIÓN:\n\n¿Eliminar toda la base de datos?')) return;
             
             try {
                 const snapshot = await db.collection('registros').get();
@@ -1013,10 +1033,6 @@
                 
                 modoEliminacionActivo = false;
                 ocultarBotonesEliminar();
-                const btnEliminar = document.getElementById('btnEliminar');
-                btnEliminar.innerHTML = '🔐 ELIMINAR REGISTROS';
-                btnEliminar.classList.remove('btn-danger');
-                btnEliminar.classList.add('btn-warning');
                 
                 cargarDatos();
                 alert('✅ Todos los registros eliminados de Firebase');
@@ -1026,123 +1042,23 @@
         }
 
         // ============================================
-        // EXPORTAR EXCEL
-        // ============================================
-        function exportarExcelConFechas() {
-            const repositorio = JSON.parse(localStorage.getItem('repositorioCharolas')) || [];
-            if (repositorio.length === 0) {
-                alert('No hay registros para exportar');
-                return;
-            }
-
-            let fechaInicio = document.getElementById('fechaInicio').value;
-            let fechaFin = document.getElementById('fechaFin').value;
-            
-            if (!fechaInicio || !fechaFin) {
-                alert('⚠️ Debes seleccionar fecha de inicio y fecha fin para exportar');
-                return;
-            }
-
-            const inicioDate = new Date(fechaInicio + 'T00:00:00');
-            const finDate = new Date(fechaFin + 'T23:59:59');
-
-            const registrosFiltrados = repositorio.filter(registro => {
-                try {
-                    const fechaRegistroObj = extraerFechaObj(registro.fechaCaptura);
-                    if (fechaRegistroObj) {
-                        return fechaRegistroObj >= inicioDate && fechaRegistroObj <= finDate;
-                    }
-                } catch (e) {}
-                return false;
-            });
-
-            if (registrosFiltrados.length === 0) {
-                alert('❌ No hay registros en el rango de fechas seleccionado');
-                return;
-            }
-
-            let dataExcel = [];
-            dataExcel.push([
-                'No. Emp.',
-                'RUTA',
-                'BITACORA',
-                'UNIDAD',
-                'TIENDA',
-                'CANTIDAD',
-                'DIFERENCIA',
-                'CNT. FISICA',
-                'TIPO',
-                'COMENTARIOS',
-                'FECHA',
-                'HORA',
-                'TURNO'
-            ]);
-
-            registrosFiltrados.forEach(registro => {
-                let fechaParte = 'N/A';
-                let horaParte = 'N/A';
-                
-                if (registro.fechaCaptura) {
-                    const partesFecha = registro.fechaCaptura.split(',');
-                    if (partesFecha.length > 0) fechaParte = partesFecha[0].trim();
-                    if (partesFecha.length > 1) horaParte = partesFecha[1].trim();
-                }
-                
-                const turnoSimple = extraerTurnoSimple(registro.turno);
-                
-                registro.registros.forEach(tienda => {
-                    dataExcel.push([
-                        registro.datosGenerales?.noEmpleado || '',
-                        registro.datosGenerales?.ruta || '',
-                        registro.datosGenerales?.bitacora || '',
-                        registro.datosGenerales?.unidad || '',
-                        tienda.tienda || '',
-                        parseFloat(tienda.cantidadBitacora) || 0,
-                        parseFloat(tienda.diferencia) || 0,
-                        parseFloat(tienda.cantidadFisica) || 0,
-                        tienda.tipo || '',
-                        registro.datosGenerales?.comentarios || '',
-                        fechaParte,
-                        horaParte,
-                        turnoSimple
-                    ]);
-                });
-            });
-
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.aoa_to_sheet(dataExcel);
-            XLSX.utils.book_append_sheet(wb, ws, 'Registro Charolas');
-            
-            const now = new Date();
-            const fechaStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}`;
-            const nombreArchivo = `Reporte_Charolas_${fechaInicio}_a_${fechaFin}_${fechaStr}.xlsx`;
-            
-            XLSX.writeFile(wb, nombreArchivo);
-            
-            alert(`✅ EXCEL GENERADO\n\nRango: ${fechaInicio} a ${fechaFin}\nRegistros: ${registrosFiltrados.length}\nTiendas: ${dataExcel.length - 1}`);
-        }
-
-        // ============================================
         // INICIALIZAR
         // ============================================
         document.addEventListener('DOMContentLoaded', function() {
             cargarDatos();
             ocultarBotonesEliminar();
-// ============================================
-// MANEJAR BOTÓN DE ELIMINAR DEL HEADER
-// ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    const btnEliminarHeader = document.getElementById('btnEliminarHeader');
-    if (btnEliminarHeader) {
-        btnEliminarHeader.addEventListener('click', function(e) {
-            e.preventDefault();
-            toggleModoEliminacion();
-        });
-    }
-});
+            
+            // Manejador para el botón de eliminar del header
+            const btnEliminarHeader = document.getElementById('btnEliminarHeader');
+            if (btnEliminarHeader) {
+                btnEliminarHeader.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleModoEliminacion();
+                });
+            }
+            
             setInterval(cargarDatos, 60000);
         });
     </script>
 </body>
-
 </html>
