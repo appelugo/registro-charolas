@@ -39,17 +39,23 @@
         .btn-primary { background:var(--primary); color:white; }
         .btn-danger { background:var(--danger); color:white; }
         .form-principal { background:linear-gradient(to right,var(--light),var(--white)); padding:8px 12px; border-radius:8px; margin-bottom:8px; border:1px solid rgba(74,137,197,0.15); }
-        .fila-campos { display:grid; grid-template-columns:1.2fr 0.9fr 0.9fr 0.7fr 0.9fr 0.9fr 0.9fr; gap:6px; align-items:center; margin-bottom:6px; }
+        .fila-campos { display:grid; grid-template-columns:1.2fr 0.9fr 0.9fr 0.7fr 0.9fr 0.9fr; gap:6px; align-items:center; margin-bottom:6px; }
         .campo-group { display:flex; flex-direction:column; }
         .campo-group label { font-weight:600; color:var(--primary); margin-bottom:1px; font-size:0.6rem; text-transform:uppercase; }
-        .campo-group input, .campo-group .valor { padding:4px 8px; border:1.5px solid var(--gray); border-radius:5px; font-size:0.8rem; background:var(--white); height:30px; }
-        .campo-group .valor { background:#F0F4F8; display:flex; align-items:center; }
+        .campo-group input, .campo-group .valor { 
+            padding:4px 8px; border:1.5px solid var(--gray); border-radius:5px; font-size:0.8rem; 
+            background:var(--white); height:30px; text-transform:uppercase; 
+        }
+        .campo-group .valor { background:#F0F4F8; display:flex; align-items:center; text-transform:none; }
         .campo-group.check-group { display:flex; flex-direction:column; gap:4px; }
         .campo-group.check-group label { display:flex; align-items:center; gap:4px; font-size:0.7rem; text-transform:none; }
+        .campo-group input:read-only { background:#F0F4F8; color:var(--text-dark); border-color:#D5DBDB; }
         .busqueda-integrada { display:flex; gap:3px; align-items:flex-end; }
         .busqueda-integrada .campo-group { flex:1; }
         .btn-lupa { background:var(--accent); color:white; border:none; border-radius:5px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.9rem; }
-        .fila-comentario { margin-top:6px; display:grid; grid-template-columns:1fr 3fr; gap:6px; }
+        .fila-comentario { margin-top:6px; }
+        .fila-comentario .campo-group { width:100%; }
+        .fila-comentario input { width:100%; height:34px; }
         .validado-message { background:rgba(39,174,96,0.1); color:var(--success); padding:6px 12px; border-radius:5px; border-left:4px solid var(--success); margin-bottom:10px; font-weight:600; font-size:0.8rem; }
         .mensaje-error { color:var(--danger); font-size:0.75rem; margin:8px 0; padding:6px 10px; background:rgba(231,76,60,0.05); border-radius:5px; border-left:4px solid var(--danger); }
         .tabla-section { margin-top:10px; }
@@ -57,12 +63,15 @@
         table { width:100%; border-collapse:collapse; table-layout:auto; min-width:1200px; }
         th { background:var(--primary); color:white; padding:6px 4px; font-size:0.65rem; text-transform:uppercase; text-align:center; position:sticky; top:0; z-index:10; }
         td { padding:5px 4px; border-bottom:1px solid var(--gray); text-align:center; font-size:0.75rem; }
-        .table-input { width:100%; padding:4px 6px; border:1.5px solid var(--gray); border-radius:4px; font-size:0.75rem; text-align:center; background:var(--white); }
+        .table-input { 
+            width:100%; padding:4px 6px; border:1.5px solid var(--gray); border-radius:4px; 
+            font-size:0.75rem; text-align:center; background:var(--white); text-transform:uppercase; 
+        }
         .table-input:focus { outline:none; border-color:var(--accent); }
         .table-input:disabled { background:#F0F4F8; border-color:#D5DBDB; }
         .table-input.valido { border-left:4px solid var(--success); border-color:var(--success); background:rgba(39,174,96,0.05); }
         .table-input.error { border-left:4px solid var(--danger); border-color:var(--danger); background:rgba(231,76,60,0.05); }
-        .badge { padding:2px 6px; border-radius:50px; font-weight:600; font-size:0.6rem; display:inline-block; }
+        .badge { padding:2px 6px; border-radius:50px; font-weight:600; font-size:0.6rem; display:inline-block; text-transform:uppercase; }
         .badge-dominos { background:rgba(0,165,176,0.1); color:#00A5B0; border:1px solid #00A5B0; }
         .badge-starbucks { background:rgba(0,98,65,0.1); color:#006241; border:1px solid #006241; }
         .nuevo-registro-badge { background:var(--warning); color:white; padding:2px 8px; border-radius:4px; font-size:0.6rem; margin-left:5px; }
@@ -96,52 +105,51 @@
                 <div class="fila-campos">
                     <!-- Col 1: Búsqueda -->
                     <div class="busqueda-integrada">
-                        <div class="campo-group"><label>🔍 BITÁCORA</label><input type="text" id="buscarBitacora" placeholder="Número" onkeypress="if(event.key==='Enter'){buscarRegistro();}"></div>
+                        <div class="campo-group"><label>🔍 BITÁCORA</label><input type="text" id="buscarBitacora" placeholder="NÚMERO" onkeypress="if(event.key==='Enter'){buscarRegistro();}" oninput="this.value=this.value.toUpperCase()"></div>
                         <button class="btn-lupa" onclick="buscarRegistro()">🔍</button>
                     </div>
                     <!-- Col 2: TRANSPORTE -->
-                    <div class="campo-group"><label>TRANSPORTE</label><input type="text" id="transporte" placeholder="Transporte"></div>
+                    <div class="campo-group"><label>TRANSPORTE</label><input type="text" id="transporte" placeholder="TRANSPORTE" oninput="this.value=this.value.toUpperCase()"></div>
                     <!-- Col 3: CHECKBOX en columna -->
                     <div class="campo-group check-group">
                         <label><input type="checkbox" id="firmada" checked> FIRMADA</label>
                         <label><input type="checkbox" id="sellada" checked> SELLADA</label>
                     </div>
-                    <!-- Col 4: FECHA -->
-                    <div class="campo-group"><label>FECHA</label><input type="date" id="fechaBitacora"></div>
+                    <!-- Col 4: FECHA DE BITÁCORA -->
+                    <div class="campo-group"><label>FECHA DE BITÁCORA</label><input type="date" id="fechaBitacora"></div>
                     <!-- Col 5: OPERADOR -->
-                    <div class="campo-group"><label>OPERADOR</label><input type="text" id="noOperador" placeholder="Operador"></div>
+                    <div class="campo-group"><label>OPERADOR</label><input type="text" id="noOperador" placeholder="OPERADOR" oninput="this.value=this.value.toUpperCase()"></div>
                     <!-- Col 6: VIAJE -->
-                    <div class="campo-group"><label>VIAJE</label><input type="text" id="noViaje" placeholder="Viaje"></div>
-                    <!-- Col 7: BOLETA -->
-                    <div class="campo-group"><label>BOLETA</label><input type="text" id="boleta" placeholder="Boleta"></div>
+                    <div class="campo-group"><label>VIAJE</label><input type="text" id="noViaje" placeholder="VIAJE" oninput="this.value=this.value.toUpperCase()"></div>
                 </div>
+                <!-- Campo COMENTARIOS ocupa las 7 columnas (ancho completo) -->
                 <div class="fila-comentario">
-                    <div class="campo-group"><label>COMENTARIOS</label><input type="text" id="comentariosValidacion" placeholder="Observaciones de validación"></div>
+                    <div class="campo-group"><label>COMENTARIOS</label><input type="text" id="comentariosValidacion" placeholder="OBSERVACIONES DE VALIDACIÓN" oninput="this.value=this.value.toUpperCase()"></div>
                 </div>
             </div>
         </div>
         <div style="flex:1; overflow-y:auto; padding-right:5px;">
-            <div id="validadoMessage" class="validado-message" style="display:none;">✅ Esta bitácora ya fue validada</div>
+            <div id="validadoMessage" class="validado-message" style="display:none;">✅ ESTA BITÁCORA YA FUE VALIDADA</div>
             <div id="mensajeError" class="mensaje-error" style="display:none;"></div>
             
-            <!-- DATOS DE BITÁCORA (solo lectura o captura según el caso) -->
+            <!-- DATOS DE BITÁCORA (solo lectura) -->
             <div class="form-principal" id="datosBitacora" style="display:none;">
                 <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px;">
                     <div class="campo-group">
                         <label>NO. EMPLEADO</label>
-                        <input type="text" id="editNoEmpleado" class="table-input" placeholder="No. Empleado" value="">
+                        <div class="valor" id="verNoEmpleado">—</div>
                     </div>
                     <div class="campo-group">
                         <label>RUTA</label>
-                        <input type="text" id="editRuta" class="table-input" placeholder="Ruta" value="">
+                        <div class="valor" id="verRuta">—</div>
                     </div>
                     <div class="campo-group">
                         <label>BITÁCORA</label>
-                        <input type="text" id="editBitacora" class="table-input" placeholder="Bitácora" value="">
+                        <div class="valor" id="verBitacora">—</div>
                     </div>
                     <div class="campo-group">
                         <label>UNIDAD</label>
-                        <input type="text" id="editUnidad" class="table-input" placeholder="Unidad" value="">
+                        <div class="valor" id="verUnidad">—</div>
                     </div>
                 </div>
             </div>
@@ -173,9 +181,9 @@
                 </div>
             </div>
         </div>
-        <div class="footer">Sistema de Validación V2.0 | E.Lugo 2026</div>
+        <div class="footer">SISTEMA DE VALIDACIÓN V2.0 | E.LUGO 2026</div>
     </div>
-    <div id="loaderOverlay" class="loader-overlay"><div class="loader-container"><div class="loader-spinner"></div><div class="loader-text">Procesando...</div></div></div>
+    <div id="loaderOverlay" class="loader-overlay"><div class="loader-container"><div class="loader-spinner"></div><div class="loader-text">PROCESANDO...</div></div></div>
 
     <script>
         const firebaseConfig = {
@@ -193,19 +201,17 @@
         let documentoIdActual = null;
         let datosOrganigrama = [];
         let esModoEdicion = true;
-        let esNuevoRegistro = false;  // Indica si estamos creando un registro nuevo
+        let esNuevoRegistro = false;
 
-        // MOSTRAR USUARIO DESDE SESSIONSTORAGE
         document.addEventListener('DOMContentLoaded', function() {
             const nombre = sessionStorage.getItem('usuarioNombre');
             const emp = sessionStorage.getItem('usuarioEmpleado');
-            if (nombre) document.getElementById('userEmpleado').textContent = nombre;
-            else if (emp) document.getElementById('userEmpleado').textContent = emp;
-            else document.getElementById('userEmpleado').textContent = 'Usuario';
+            if (nombre) document.getElementById('userEmpleado').textContent = nombre.toUpperCase();
+            else if (emp) document.getElementById('userEmpleado').textContent = emp.toUpperCase();
+            else document.getElementById('userEmpleado').textContent = 'USUARIO';
             document.getElementById('userInfo').style.display = 'flex';
             document.getElementById('loginButtons').style.display = 'none';
             cargarOrganigrama();
-            // Inicializar tabla vacía con 5 filas
             inicializarTablaVacia();
         });
 
@@ -215,21 +221,20 @@
             try {
                 const snap = await db.collection('organigrama').doc('lista_cecos').get();
                 if (snap.exists) datosOrganigrama = snap.data().datosCompletos || [];
-                console.log('✅ Organigrama cargado:', datosOrganigrama.length);
+                console.log('✅ ORGANIGRAMA CARGADO:', datosOrganigrama.length);
             } catch (e) { datosOrganigrama = []; }
         }
 
         function obtenerDatosTienda(ceco) {
             if (!datosOrganigrama.length) return { nombre: '', marca: '' };
             const t = datosOrganigrama.find(i => String(i.ceco).trim() === String(ceco).trim());
-            return t ? { nombre: t.tienda || '', marca: t.marca || '' } : { nombre: '', marca: '' };
+            return t ? { nombre: (t.tienda || '').toUpperCase(), marca: (t.marca || '').toUpperCase() } : { nombre: '', marca: '' };
         }
 
-        function validarTienda(input, index) {
-            const ceco = input.value.trim();
+        function validarTienda(input) {
+            const ceco = input.value.trim().toUpperCase();
             if (!ceco) {
                 input.classList.remove('valido', 'error');
-                // Limpiar nombre y marca de la fila
                 const fila = input.closest('tr');
                 if (fila) {
                     fila.cells[1].innerHTML = '<span class="texto-tabla"></span>';
@@ -248,8 +253,8 @@
                     fila.cells[1].innerHTML = `<span class="texto-tabla">${datos.nombre}</span>`;
                     
                     let badgeClass = '';
-                    if (datos.marca.toUpperCase().includes('DOMINO')) badgeClass = 'badge-dominos';
-                    else if (datos.marca.toUpperCase().includes('STARBUCKS') || datos.marca.toUpperCase().includes('CHILIS')) badgeClass = 'badge-starbucks';
+                    if (datos.marca.includes('DOMINO')) badgeClass = 'badge-dominos';
+                    else if (datos.marca.includes('STARBUCKS') || datos.marca.includes('CHILIS')) badgeClass = 'badge-starbucks';
                     
                     fila.cells[2].innerHTML = `<span class="badge ${badgeClass}">${datos.marca}</span>`;
                 }
@@ -257,13 +262,12 @@
                 input.classList.add('error');
                 input.classList.remove('valido');
                 if (fila) {
-                    fila.cells[1].innerHTML = '<span class="texto-tabla" style="color:var(--danger);">No encontrado</span>';
+                    fila.cells[1].innerHTML = '<span class="texto-tabla" style="color:var(--danger);">NO ENCONTRADO</span>';
                     fila.cells[2].innerHTML = '<span class="badge"></span>';
                 }
             }
         }
 
-        // Inicializar tabla vacía con 5 filas
         function inicializarTablaVacia() {
             const tbody = document.getElementById('tablaBody');
             tbody.innerHTML = '';
@@ -272,17 +276,15 @@
             }
         }
 
-        // Agregar una fila de tienda (vacía)
         function agregarFilaTienda() {
             const tbody = document.getElementById('tablaBody');
-            const index = tbody.children.length;
             const fila = document.createElement('tr');
             fila.innerHTML = `
-                <td><input type="text" class="table-input" placeholder="CECO" onblur="validarTienda(this, ${index})" onkeypress="if(event.key==='Enter'){this.blur();}"></td>
+                <td><input type="text" class="table-input" placeholder="CECO" onblur="validarTienda(this)" oninput="this.value=this.value.toUpperCase()"></td>
                 <td><span class="texto-tabla"></span></td>
                 <td><span class="badge"></span></td>
-                <td><input type="text" class="table-input" placeholder="Remisión"></td>
-                <td><input type="text" class="table-input" placeholder="Complemento"></td>
+                <td><input type="text" class="table-input" placeholder="REMISIÓN" oninput="this.value=this.value.toUpperCase()"></td>
+                <td><input type="text" class="table-input" placeholder="COMPLEMENTO" oninput="this.value=this.value.toUpperCase()"></td>
                 <td>0</td>
                 <td>0</td>
                 <td><strong>0</strong></td>
@@ -290,18 +292,40 @@
             tbody.appendChild(fila);
         }
 
-        // Agregar 5 filas nuevas
         function agregarFilasTiendas() {
             for (let i = 0; i < 5; i++) {
                 agregarFilaTienda();
             }
         }
 
+        function limpiarTodoDespuesGuardar() {
+            // Limpiar campos de búsqueda y validación
+            document.getElementById('buscarBitacora').value = '';
+            document.getElementById('transporte').value = '';
+            document.getElementById('firmada').checked = true;
+            document.getElementById('sellada').checked = true;
+            document.getElementById('fechaBitacora').value = '';
+            document.getElementById('noOperador').value = '';
+            document.getElementById('noViaje').value = '';
+            document.getElementById('comentariosValidacion').value = '';
+            
+            // Ocultar datos de bitácora
+            document.getElementById('datosBitacora').style.display = 'none';
+            document.getElementById('validadoMessage').style.display = 'none';
+            
+            // Reiniciar tabla vacía
+            inicializarTablaVacia();
+            
+            esNuevoRegistro = false;
+            registroActual = null;
+            documentoIdActual = null;
+        }
+
         async function buscarRegistro() {
-            const bitacora = document.getElementById('buscarBitacora').value.trim();
+            const bitacora = document.getElementById('buscarBitacora').value.trim().toUpperCase();
             
             if (!bitacora) {
-                mostrarError('⚠️ Ingresa número de bitácora');
+                mostrarError('⚠️ INGRESA NÚMERO DE BITÁCORA');
                 return;
             }
 
@@ -312,7 +336,6 @@
                     .get();
 
                 if (snapshot.empty) {
-                    // No encontrado - modo nuevo registro
                     ocultarLoader();
                     esNuevoRegistro = true;
                     esModoEdicion = true;
@@ -320,51 +343,33 @@
                     document.getElementById('btnValidar').disabled = false;
                     document.getElementById('btnAgregarTiendas').style.display = 'inline-block';
                     
-                    // Limpiar campos y preparar para nuevo registro
-                    document.getElementById('editNoEmpleado').value = '';
-                    document.getElementById('editRuta').value = '';
-                    document.getElementById('editBitacora').value = bitacora;
-                    document.getElementById('editUnidad').value = '';
+                    document.getElementById('verNoEmpleado').textContent = '';
+                    document.getElementById('verRuta').textContent = '';
+                    document.getElementById('verBitacora').textContent = bitacora;
+                    document.getElementById('verUnidad').textContent = '';
                     
-                    // Mostrar sección de edición
                     document.getElementById('datosBitacora').style.display = 'block';
-                    // Habilitar campos de edición
-                    document.getElementById('editNoEmpleado').disabled = false;
-                    document.getElementById('editRuta').disabled = false;
-                    document.getElementById('editBitacora').disabled = true; // La bitácora no se puede cambiar
-                    document.getElementById('editUnidad').disabled = false;
                     
-                    // Limpiar tabla y agregar 5 filas vacías
                     inicializarTablaVacia();
                     
-                    mostrarError('📝 No existe. Puedes crear un nuevo registro.');
+                    mostrarError('📝 NO EXISTE. PUEDES CREAR UN NUEVO REGISTRO.');
                     registroActual = null;
                     documentoIdActual = null;
                     return;
                 }
 
-                // Registro existente
                 snapshot.forEach(doc => {
                     registroActual = doc.data();
                     documentoIdActual = doc.id;
                 });
 
-                // Cargar datos en el formulario de edición
-                document.getElementById('editNoEmpleado').value = registroActual.datosGenerales?.noEmpleado || '';
-                document.getElementById('editRuta').value = registroActual.datosGenerales?.ruta || '';
-                document.getElementById('editBitacora').value = registroActual.datosGenerales?.bitacora || '';
-                document.getElementById('editUnidad').value = registroActual.datosGenerales?.unidad || '';
-                
-                // Deshabilitar campos si ya está validado
-                const validado = registroActual.validacion ? true : false;
-                
-                document.getElementById('editNoEmpleado').disabled = validado;
-                document.getElementById('editRuta').disabled = validado;
-                document.getElementById('editBitacora').disabled = true;
-                document.getElementById('editUnidad').disabled = validado;
+                document.getElementById('verNoEmpleado').textContent = (registroActual.datosGenerales?.noEmpleado || '').toUpperCase();
+                document.getElementById('verRuta').textContent = (registroActual.datosGenerales?.ruta || '').toUpperCase();
+                document.getElementById('verBitacora').textContent = (registroActual.datosGenerales?.bitacora || '').toUpperCase();
+                document.getElementById('verUnidad').textContent = (registroActual.datosGenerales?.unidad || '').toUpperCase();
                 document.getElementById('datosBitacora').style.display = 'block';
 
-                if (validado) {
+                if (registroActual.validacion) {
                     esModoEdicion = false;
                     document.getElementById('validadoMessage').style.display = 'block';
                     document.getElementById('btnValidar').disabled = true;
@@ -383,7 +388,7 @@
                 ocultarError();
 
             } catch (e) { 
-                mostrarError('❌ Error: ' + e.message); 
+                mostrarError('❌ ERROR: ' + e.message); 
             } finally { 
                 ocultarLoader(); 
             }
@@ -396,16 +401,16 @@
             if (r.registros && r.registros.length) {
                 r.registros.forEach((t, i) => {
                     const d = obtenerDatosTienda(t.tienda);
-                    const badge = (d.marca||'').toUpperCase().includes('DOMINO') ? 'badge-dominos' : 'badge-starbucks';
-                    const rem = r.validacion?.tiendas?.[i]?.remision||'';
-                    const com = r.validacion?.tiendas?.[i]?.complemento||'';
+                    const badge = d.marca.includes('DOMINO') ? 'badge-dominos' : 'badge-starbucks';
+                    const rem = (r.validacion?.tiendas?.[i]?.remision || '').toUpperCase();
+                    const com = (r.validacion?.tiendas?.[i]?.complemento || '').toUpperCase();
                     const fila = document.createElement('tr');
                     fila.innerHTML = `
-                        <td><input type="text" class="table-input" value="${t.tienda||''}" placeholder="CECO" onblur="validarTienda(this, ${i})" ${!esModoEdicion?'disabled':''}></td>
-                        <td><span class="texto-tabla">${d.nombre||''}</span></td>
-                        <td><span class="badge ${badge}">${d.marca||''}</span></td>
-                        <td><input type="text" class="table-input" value="${rem}" placeholder="Remisión" ${!esModoEdicion?'disabled':''}></td>
-                        <td><input type="text" class="table-input" value="${com}" placeholder="Complemento" ${!esModoEdicion?'disabled':''}></td>
+                        <td><input type="text" class="table-input" value="${(t.tienda||'').toUpperCase()}" placeholder="CECO" onblur="validarTienda(this)" ${!esModoEdicion?'disabled':''} oninput="this.value=this.value.toUpperCase()"></td>
+                        <td><span class="texto-tabla">${d.nombre}</span></td>
+                        <td><span class="badge ${badge}">${d.marca}</span></td>
+                        <td><input type="text" class="table-input" value="${rem}" placeholder="REMISIÓN" ${!esModoEdicion?'disabled':''} oninput="this.value=this.value.toUpperCase()"></td>
+                        <td><input type="text" class="table-input" value="${com}" placeholder="COMPLEMENTO" ${!esModoEdicion?'disabled':''} oninput="this.value=this.value.toUpperCase()"></td>
                         <td>${t.cantidadBitacora||0}</td>
                         <td>${t.diferencia||0}</td>
                         <td><strong>${t.cantidadFisica||0}</strong></td>
@@ -417,45 +422,41 @@
         }
 
         function bloquearCampos(b) {
-            const campos = ['transporte','firmada','sellada','fechaBitacora','noOperador','noViaje','boleta','comentariosValidacion'];
+            const campos = ['transporte','firmada','sellada','fechaBitacora','noOperador','noViaje','comentariosValidacion'];
             campos.forEach(id => { const el = document.getElementById(id); if(el) el.disabled = b; });
         }
 
         function cargarDatosValidacion(r) {
             if (r.validacion) {
-                document.getElementById('transporte').value = r.validacion.transporte||'';
+                document.getElementById('transporte').value = (r.validacion.transporte||'').toUpperCase();
                 document.getElementById('firmada').checked = r.validacion.firmada||false;
                 document.getElementById('sellada').checked = r.validacion.sellada||false;
                 document.getElementById('fechaBitacora').value = r.validacion.fechaBitacora||'';
-                document.getElementById('noOperador').value = r.validacion.noOperador||'';
-                document.getElementById('noViaje').value = r.validacion.noViaje||'';
-                document.getElementById('boleta').value = r.validacion.boleta||'';
-                document.getElementById('comentariosValidacion').value = r.validacion.comentarios||'';
+                document.getElementById('noOperador').value = (r.validacion.noOperador||'').toUpperCase();
+                document.getElementById('noViaje').value = (r.validacion.noViaje||'').toUpperCase();
+                document.getElementById('comentariosValidacion').value = (r.validacion.comentarios||'').toUpperCase();
             }
         }
 
         async function guardarValidacion() {
-            mostrarLoader('Guardando...');
+            mostrarLoader('GUARDANDO...');
             
             try {
-                // Recolectar datos de tiendas
                 const tiendas = [];
                 const filas = document.querySelectorAll('#tablaBody tr');
                 let cantidadTotal = 0;
                 let totalDominos = 0;
                 let totalStarbucks = 0;
 
-                filas.forEach((fila, index) => {
+                filas.forEach((fila) => {
                     const inputs = fila.querySelectorAll('input');
-                    const ceco = inputs[0]?.value.trim() || '';
-                    if (!ceco) return; // Ignorar filas vacías
+                    const ceco = inputs[0]?.value.trim().toUpperCase() || '';
+                    if (!ceco) return;
 
-                    const remision = inputs[1]?.value || '';
-                    const complemento = inputs[2]?.value || '';
+                    const remision = inputs[3]?.value.trim().toUpperCase() || '';
+                    const complemento = inputs[4]?.value.trim().toUpperCase() || '';
                     
-                    // Obtener marca y nombre del organigrama
                     const datos = obtenerDatosTienda(ceco);
-                    const cantidad = 0; // Por defecto para nuevos registros
                     
                     tiendas.push({
                         tienda: ceco,
@@ -468,29 +469,28 @@
                     });
 
                     cantidadTotal++;
-                    if (datos.marca?.toUpperCase().includes('DOMINO')) totalDominos++;
-                    else if (datos.marca?.toUpperCase().includes('STARBUCKS') || datos.marca?.toUpperCase().includes('CHILIS')) totalStarbucks++;
+                    if (datos.marca?.includes('DOMINO')) totalDominos++;
+                    else if (datos.marca?.includes('STARBUCKS') || datos.marca?.includes('CHILIS')) totalStarbucks++;
                 });
 
-                const nombreValidador = sessionStorage.getItem('usuarioNombre') || sessionStorage.getItem('usuarioEmpleado') || 'Validador';
+                const nombreValidador = (sessionStorage.getItem('usuarioNombre') || sessionStorage.getItem('usuarioEmpleado') || 'VALIDADOR').toUpperCase();
                 const fechaActual = new Date().toLocaleString();
-                const fechaValidacion = new Date().toISOString().split('T')[0]; // Fecha para el campo fechaBitacora
+                const fechaValidacion = new Date().toISOString().split('T')[0];
 
-                // Combinar comentarios
-                const comentarioExistente = registroActual?.datosGenerales?.comentarios || '';
-                const comentarioNuevo = document.getElementById('comentariosValidacion').value.trim();
+                const comentarioExistente = (registroActual?.datosGenerales?.comentarios || '').toUpperCase();
+                const comentarioNuevo = document.getElementById('comentariosValidacion').value.trim().toUpperCase();
                 let comentarioFinal = comentarioExistente;
                 if (comentarioNuevo) {
                     comentarioFinal = comentarioExistente 
-                        ? `${comentarioExistente} | [Validación ${fechaActual} por ${nombreValidador}: ${comentarioNuevo}]`
-                        : `[Validación ${fechaActual} por ${nombreValidador}: ${comentarioNuevo}]`;
+                        ? `${comentarioExistente} | [VALIDACIÓN ${fechaActual} POR ${nombreValidador}: ${comentarioNuevo}]`
+                        : `[VALIDACIÓN ${fechaActual} POR ${nombreValidador}: ${comentarioNuevo}]`;
                 }
 
                 const datosGenerales = {
-                    noEmpleado: document.getElementById('editNoEmpleado').value.trim() || 'S/N',
-                    ruta: document.getElementById('editRuta').value.trim() || 'S/N',
-                    bitacora: document.getElementById('editBitacora').value.trim() || 'S/N',
-                    unidad: document.getElementById('editUnidad').value.trim() || 'S/N',
+                    noEmpleado: document.getElementById('verNoEmpleado').textContent || 'S/N',
+                    ruta: document.getElementById('verRuta').textContent || 'S/N',
+                    bitacora: document.getElementById('verBitacora').textContent || 'S/N',
+                    unidad: document.getElementById('verUnidad').textContent || 'S/N',
                     comentarios: comentarioFinal
                 };
 
@@ -502,13 +502,12 @@
 
                 const validacionData = {
                     validador: nombreValidador,
-                    transporte: document.getElementById('transporte').value.trim() || '',
+                    transporte: document.getElementById('transporte').value.trim().toUpperCase() || '',
                     firmada: document.getElementById('firmada').checked,
                     sellada: document.getElementById('sellada').checked,
                     fechaBitacora: document.getElementById('fechaBitacora').value || fechaValidacion,
-                    noOperador: document.getElementById('noOperador').value.trim() || '',
-                    noViaje: document.getElementById('noViaje').value.trim() || '',
-                    boleta: document.getElementById('boleta').value.trim() || '',
+                    noOperador: document.getElementById('noOperador').value.trim().toUpperCase() || '',
+                    noViaje: document.getElementById('noViaje').value.trim().toUpperCase() || '',
                     comentarios: comentarioNuevo,
                     tiendas: tiendas.map(t => ({ remision: t.remision, complemento: t.complemento })),
                     fechaValidacion: fechaActual,
@@ -516,7 +515,6 @@
                 };
 
                 if (esNuevoRegistro) {
-                    // Crear nuevo registro
                     const idUnico = Date.now() + '-' + Math.random().toString(36).substr(2, 8);
                     const nuevoRegistro = {
                         id: idUnico,
@@ -539,9 +537,8 @@
                     };
                     
                     await db.collection('registros').doc(idUnico).set(nuevoRegistro);
-                    alert('✅ Nuevo registro guardado correctamente');
+                    alert('✅ NUEVO REGISTRO GUARDADO CORRECTAMENTE');
                 } else {
-                    // Actualizar registro existente
                     await db.collection('registros').doc(documentoIdActual).update({
                         datosGenerales: datosGenerales,
                         registros: tiendas.map(t => ({
@@ -558,18 +555,15 @@
                         },
                         validacion: validacionData
                     });
-                    alert('✅ Validación guardada correctamente');
+                    alert('✅ VALIDACIÓN GUARDADA CORRECTAMENTE');
                 }
 
                 ocultarLoader();
-                esModoEdicion = false;
-                document.getElementById('validadoMessage').style.display = 'block';
-                document.getElementById('btnValidar').disabled = true;
-                bloquearCampos(true);
+                limpiarTodoDespuesGuardar();
 
             } catch (e) { 
                 ocultarLoader(); 
-                alert('❌ Error: ' + e.message); 
+                alert('❌ ERROR: ' + e.message); 
             }
         }
 
@@ -582,12 +576,12 @@
         }
 
         function mostrarLoader(m) { 
-            document.querySelector('.loader-text').textContent = m || 'Procesando...'; 
+            document.querySelector('.loader-text').textContent = (m || 'PROCESANDO...').toUpperCase(); 
             document.getElementById('loaderOverlay').style.display = 'flex'; 
         }
         function ocultarLoader() { document.getElementById('loaderOverlay').style.display = 'none'; }
         function mostrarError(m) { 
-            document.getElementById('mensajeError').textContent = m; 
+            document.getElementById('mensajeError').textContent = m.toUpperCase(); 
             document.getElementById('mensajeError').style.display = 'block'; 
         }
         function ocultarError() { document.getElementById('mensajeError').style.display = 'none'; }
