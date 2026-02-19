@@ -959,5 +959,66 @@
             esModoEdicion = true;
         }
     </script>
+<!-- BOTÓN DE DEPURACIÓN (TEMPORAL) -->
+<div style="position: fixed; bottom: 10px; left: 10px; z-index: 9999;">
+    <button onclick="verificarOrganigrama()" style="background: #0A2342; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+        🔍 VERIFICAR ORGANIGRAMA
+    </button>
+</div>
+
+<script>
+// ============================================
+// FUNCIÓN DE DEPURACIÓN - VERIFICAR ORGANIGRAMA
+// ============================================
+async function verificarOrganigrama() {
+    console.log('🔍 VERIFICACIÓN MANUAL DE ORGANIGRAMA');
+    console.log('1. datosOrganigrama (variable local):', datosOrganigrama);
+    console.log('2. Cantidad de registros:', datosOrganigrama?.length || 0);
+    
+    if (datosOrganigrama && datosOrganigrama.length > 0) {
+        console.log('3. Primer registro:', datosOrganigrama[0]);
+        console.log('   - ceco:', datosOrganigrama[0].ceco);
+        console.log('   - tienda:', datosOrganigrama[0].tienda);
+        console.log('   - marca:', datosOrganigrama[0].marca);
+        
+        // Probar búsqueda con el primer CECO
+        const cecoPrueba = datosOrganigrama[0].ceco;
+        console.log(`4. Probando búsqueda con CECO: ${cecoPrueba}`);
+        
+        const encontrado = datosOrganigrama.find(item => String(item.ceco).trim() === String(cecoPrueba).trim());
+        if (encontrado) {
+            console.log('   ✅ Búsqueda exitosa:', encontrado);
+        } else {
+            console.log('   ❌ No se encontró');
+        }
+    } else {
+        console.log('❌ datosOrganigrama está vacío');
+        
+        // Intentar cargar directamente desde Firebase
+        console.log('5. Intentando carga directa desde Firebase...');
+        try {
+            const snapshot = await db.collection('organigrama').doc('lista_cecos').get();
+            if (snapshot.exists) {
+                const data = snapshot.data();
+                console.log('   ✅ Documento encontrado en Firebase');
+                console.log('   datosCompletos:', data.datosCompletos);
+                if (data.datosCompletos && data.datosCompletos.length > 0) {
+                    console.log('   Primer registro:', data.datosCompletos[0]);
+                } else {
+                    console.log('   ❌ datosCompletos está vacío');
+                }
+            } else {
+                console.log('   ❌ El documento NO existe');
+            }
+        } catch (error) {
+            console.error('   ❌ Error:', error);
+        }
+    }
+}
+
+// Ejecutar automáticamente después de 3 segundos
+setTimeout(verificarOrganigrama, 3000);
+</script>
 </body>
 </html>
+
