@@ -61,7 +61,6 @@
         .validado-message { background:rgba(39,174,96,0.1); color:var(--success); padding:6px 12px; border-radius:5px; border-left:4px solid var(--success); margin-bottom:10px; font-weight:600; font-size:0.8rem; }
         .mensaje-error { color:var(--danger); font-size:0.75rem; margin:8px 0; padding:6px 10px; background:rgba(231,76,60,0.05); border-radius:5px; border-left:4px solid var(--danger); }
         
-        /* Totales estilo formulario */
         .totals-compact {
             display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-left:15px;
         }
@@ -122,26 +121,19 @@
             </div>
             <div class="form-principal">
                 <div class="fila-campos">
-                    <!-- Col 1: Búsqueda -->
                     <div class="busqueda-integrada">
                         <div class="campo-group"><label>🔍 BITÁCORA</label><input type="text" id="buscarBitacora" placeholder="NÚMERO" onkeypress="if(event.key==='Enter'){buscarRegistro();}" oninput="this.value=this.value.toUpperCase()"></div>
                         <button class="btn-lupa" onclick="buscarRegistro()">🔍</button>
                     </div>
-                    <!-- Col 2: TRANSPORTE -->
                     <div class="campo-group"><label>TRANSPORTE</label><input type="text" id="transporte" placeholder="TRANSPORTE" oninput="this.value=this.value.toUpperCase()"></div>
-                    <!-- Col 3: CHECKBOX en columna -->
                     <div class="campo-group check-group">
                         <label><input type="checkbox" id="firmada" checked> FIRMADA</label>
                         <label><input type="checkbox" id="sellada" checked> SELLADA</label>
                     </div>
-                    <!-- Col 4: FECHA DE BITÁCORA -->
                     <div class="campo-group"><label>FECHA DE BITÁCORA</label><input type="date" id="fechaBitacora"></div>
-                    <!-- Col 5: OPERADOR -->
                     <div class="campo-group"><label>OPERADOR</label><input type="text" id="noOperador" placeholder="OPERADOR" oninput="this.value=this.value.toUpperCase()"></div>
-                    <!-- Col 6: VIAJE -->
                     <div class="campo-group"><label>VIAJE</label><input type="text" id="noViaje" placeholder="VIAJE" oninput="this.value=this.value.toUpperCase()"></div>
                 </div>
-                <!-- Campo COMENTARIOS ocupa ancho completo -->
                 <div class="fila-comentario">
                     <div class="campo-group"><label>COMENTARIOS</label><input type="text" id="comentariosValidacion" placeholder="OBSERVACIONES DE VALIDACIÓN" oninput="this.value=this.value.toUpperCase()"></div>
                 </div>
@@ -151,7 +143,6 @@
             <div id="validadoMessage" class="validado-message" style="display:none;">✅ ESTA BITÁCORA YA FUE VALIDADA</div>
             <div id="mensajeError" class="mensaje-error" style="display:none;"></div>
             
-            <!-- DATOS DE BITÁCORA (solo lectura o editables según caso) -->
             <div class="form-principal" id="datosBitacora" style="display:none;">
                 <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px;">
                     <div class="campo-group">
@@ -173,7 +164,6 @@
                 </div>
             </div>
 
-            <!-- CABECERA DE TABLA CON BOTÓN AGREGAR Y TOTALES -->
             <div class="tabla-header">
                 <h3 style="color:var(--primary); font-size:1rem;">📋 VALIDACIÓN DE TIENDAS</h3>
                 <div class="totals-compact" id="totalesContainer">
@@ -189,7 +179,6 @@
                 <button class="btn-agregar" onclick="agregarFilasTiendas()" id="btnAgregarTiendas" style="margin-left:auto;">➕ AGREGAR 5 TIENDAS</button>
             </div>
 
-            <!-- TABLA DE TIENDAS -->
             <div id="tablaSection" style="display:block;" class="tabla-section">
                 <div class="table-responsive">
                     <table id="tablaTiendas">
@@ -381,7 +370,6 @@
             document.getElementById('verBitacora').textContent = bitacora;
             document.getElementById('editUnidad').value = '';
             
-            // HABILITAR campos para edición
             document.getElementById('editNoEmpleado').readOnly = false;
             document.getElementById('editRuta').readOnly = false;
             document.getElementById('editUnidad').readOnly = false;
@@ -417,7 +405,6 @@
 
                 if (snapshot.empty) {
                     ocultarLoader();
-                    // NUEVO REGISTRO - TODOS LOS CAMPOS HABILITADOS
                     esNuevoRegistro = true;
                     esModoEdicion = true;
                     document.getElementById('validadoMessage').style.display = 'none';
@@ -435,7 +422,6 @@
                     return;
                 }
 
-                // REGISTRO EXISTENTE
                 snapshot.forEach(doc => {
                     registroActual = doc.data();
                     documentoIdActual = doc.id;
@@ -539,11 +525,26 @@
                     
                     const datos = obtenerDatosTienda(ceco);
                     
+                    // 🔴 CORRECCIÓN: Conservar cantidades originales si existen
+                    let cantidadBitacora = 0;
+                    let diferencia = 0;
+                    let cantidadFisica = 0;
+                    
+                    // Si es un registro existente, buscar la tienda original
+                    if (registroActual && registroActual.registros) {
+                        const tiendaOriginal = registroActual.registros.find(t => t.tienda === ceco);
+                        if (tiendaOriginal) {
+                            cantidadBitacora = tiendaOriginal.cantidadBitacora || 0;
+                            diferencia = tiendaOriginal.diferencia || 0;
+                            cantidadFisica = tiendaOriginal.cantidadFisica || 0;
+                        }
+                    }
+                    
                     tiendas.push({
                         tienda: ceco,
-                        cantidadBitacora: 0,
-                        diferencia: 0,
-                        cantidadFisica: 0,
+                        cantidadBitacora: cantidadBitacora,
+                        diferencia: diferencia,
+                        cantidadFisica: cantidadFisica,
                         tipo: datos.marca || '',
                         remision,
                         complemento
